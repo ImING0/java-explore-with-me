@@ -10,6 +10,7 @@ import ru.practicum.ewm.stats.repository.StatsRepository;
 import ru.practicum.ewm.stats.service.IStatsService;
 
 import java.time.LocalDateTime;
+import java.util.List;
 import java.util.Set;
 
 @Service
@@ -17,6 +18,7 @@ import java.util.Set;
 public class StatsService implements IStatsService {
     private final StatsRepository statsRepository;
     private final StatsMapper statsMapper;
+
     @Override
     public void add(StatsRequestDto requestDto) {
         Stats statsToSave = statsMapper.mapToStats(requestDto);
@@ -24,10 +26,14 @@ public class StatsService implements IStatsService {
     }
 
     @Override
-    public StatsResponseDto get(LocalDateTime start,
-                                LocalDateTime end,
-                                Set<String> uris,
-                                boolean unique) {
-        return null;
+    public List<StatsResponseDto> get(LocalDateTime start,
+                                      LocalDateTime end,
+                                      Set<String> uris,
+                                      boolean unique) {
+        if (unique) {
+            return statsRepository.findAllStatsUnique(start, end, uris);
+        } else {
+            return statsRepository.findAllStats(start, end, uris);
+        }
     }
 }

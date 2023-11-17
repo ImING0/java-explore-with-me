@@ -24,5 +24,5 @@ public class Stats {
     @Column(name = "ip", nullable = false)
     private String ip;
     @Column(name = "timestamp", nullable = false)
-    private LocalDateTime timeStamp;
+    private LocalDateTime timestamp;
 }

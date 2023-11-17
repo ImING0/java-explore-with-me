@@ -1,4 +1,4 @@
-drop table if exists stats;
+drop table if exists stats cascade;
 
 create table stats
 (

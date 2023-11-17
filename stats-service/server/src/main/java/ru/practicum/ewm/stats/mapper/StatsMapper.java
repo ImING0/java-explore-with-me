@@ -11,7 +11,7 @@ public class StatsMapper {
                 .app(statsRequestDto.getApp())
                 .uri(statsRequestDto.getUri())
                 .ip(statsRequestDto.getIp())
-                .timeStamp(statsRequestDto.getTimeStamp())
+                .timestamp(statsRequestDto.getTimestamp())
                 .build();
     }
 }
