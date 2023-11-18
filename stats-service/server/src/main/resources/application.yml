@@ -80,9 +80,9 @@ spring:
       on-profile: docker
   datasource:
     driverClassName: org.postgresql.Driver
-    url: ${SPRING_DATASOURCE_URL:jdbc:postgresql://db:5432/ewm} # используй переменную окружения или, если она отсутствует, fallback на H2
-    username: ${DB_USERNAME:ewm} # аналогично для имени пользователя
-    password: ${DB_PASSWORD:ewm} # и для пароля
+    url: ${SPRING_DATASOURCE_URL:jdbc:postgresql://db:5432/ewm}
+    username: ${DB_USERNAME:postgres}
+    password: ${DB_PASSWORD:postgres}
 
 logging:
   level:

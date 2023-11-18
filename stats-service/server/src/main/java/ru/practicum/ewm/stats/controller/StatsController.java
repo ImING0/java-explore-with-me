@@ -11,6 +11,7 @@ import ru.practicum.ewm.dto.StatsResponseDto;
 import ru.practicum.ewm.stats.service.IStatsService;
 import ru.practicum.ewm.util.DateTimeUtil;
 
+import javax.validation.Valid;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Set;
@@ -23,7 +24,7 @@ public class StatsController {
 
     @PostMapping("/hit")
     @ResponseStatus(HttpStatus.CREATED)
-    public void addHit(@RequestBody StatsRequestDto requestDto) {
+    public void addHit(@RequestBody @Valid StatsRequestDto requestDto) {
         log.info("addHit request: {}", requestDto);
         statsService.add(requestDto);
     }
@@ -32,9 +33,9 @@ public class StatsController {
     @ResponseStatus(HttpStatus.OK)
     public ResponseEntity<List<StatsResponseDto>> getStats(
             @RequestParam(name = "start", required = true)
-            @DateTimeFormat(pattern = DateTimeUtil.DATETIME_FORMAT) LocalDateTime start,
+            @DateTimeFormat(pattern = DateTimeUtil.DATE_TIME_FORMAT) LocalDateTime start,
             @RequestParam(name = "end", required = true)
-            @DateTimeFormat(pattern = DateTimeUtil.DATETIME_FORMAT) LocalDateTime end,
+            @DateTimeFormat(pattern = DateTimeUtil.DATE_TIME_FORMAT) LocalDateTime end,
             @RequestParam(name = "uris", required = false) Set<String> uris,
             @RequestParam(name = "unique", required = false, defaultValue = "false")
             boolean unique) {
