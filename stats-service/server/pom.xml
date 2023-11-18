@@ -10,6 +10,9 @@
     </parent>
 
     <artifactId>server</artifactId>
+    <version>0.0.1-SNAPSHOT</version>
+
+    <name>Statistics Server</name>
 
     <properties>
         <maven.compiler.source>11</maven.compiler.source>

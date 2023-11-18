@@ -11,5 +11,5 @@
 
     <artifactId>common</artifactId>
     <version>0.0.1-SNAPSHOT</version>
-
+    <name>Statistic server-client common</name>
 </project>

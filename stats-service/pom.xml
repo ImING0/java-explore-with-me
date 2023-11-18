@@ -9,8 +9,10 @@
         <version>0.0.1-SNAPSHOT</version>
     </parent>
     <packaging>pom</packaging>
+
     <artifactId>stats-service</artifactId>
     <version>0.0.1-SNAPSHOT</version>
+    <name>Statistics Service</name>
 
     <modules>
         <module>client</module>
