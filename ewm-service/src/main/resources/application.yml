@@ -14,7 +14,7 @@ spring:
       on-profile: ci,test
   datasource:
     driverClassName: org.h2.Driver
-    url: jdbc:h2:mem:stats
+    url: jdbc:h2:mem:ewm
     username: test
     password: test
 
@@ -24,8 +24,7 @@ logging:
     org.springframework.transaction: INFO
     org.springframework.transaction.interceptor: TRACE
     org.springframework.orm.jpa.JpaTransactionManager: DEBUG
-server:
-  port: 9090
+
 ---
 spring:
   # Профиль для тестов на ПК
@@ -45,7 +44,7 @@ spring:
       on-profile: default
   datasource:
     driverClassName: org.postgresql.Driver
-    url: jdbc:postgresql://localhost:5432/stats
+    url: jdbc:postgresql://localhost:5431/ewm
     username: postgres
     password: postgres
 
@@ -56,7 +55,7 @@ logging:
     org.springframework.transaction.interceptor: TRACE
     org.springframework.orm.jpa.JpaTransactionManager: INFO # был дебаг
 server:
-  port: 9090
+  port: 8080
 
 ---
 # для тестов в контейнере
@@ -78,10 +77,12 @@ spring:
       on-profile: docker
   datasource:
     driverClassName: org.postgresql.Driver
-    url: ${SPRING_DATASOURCE_URL:jdbc:postgresql://db:5432/stats}
+    url: ${SPRING_DATASOURCE_URL:jdbc:postgresql://db:5431/ewm}
     username: ${DB_USERNAME:postgres}
     password: ${DB_PASSWORD:postgres}
-
+stats:
+  server:
+    url: ${STATS_SERVER_URL:http://localhost:9090}
 logging:
   level:
     org.springframework.orm.jpa: INFO
@@ -89,4 +90,4 @@ logging:
     org.springframework.transaction.interceptor: TRACE
     org.springframework.orm.jpa.JpaTransactionManager: INFO # был дебаг
 server:
-  port: 9090
+  port: 8080
