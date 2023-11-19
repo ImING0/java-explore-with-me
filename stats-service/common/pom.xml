@@ -13,6 +13,4 @@
     <version>0.0.1-SNAPSHOT</version>
     <name>stats-server-client common</name>
 
-    <!-- перечислим все зависимости, которые нужны только тут -->
-
 </project>
