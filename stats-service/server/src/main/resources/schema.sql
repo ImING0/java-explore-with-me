@@ -1,6 +1,6 @@
-drop table if exists stats cascade;
+DROP TABLE IF EXISTS stats CASCADE;
 
-create table stats
+CREATE TABLE stats
 (
     id        bigint generated always as identity,
     app       varchar(128) not null,

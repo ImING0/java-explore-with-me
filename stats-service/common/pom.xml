@@ -11,5 +11,8 @@
 
     <artifactId>common</artifactId>
     <version>0.0.1-SNAPSHOT</version>
-    <name>Statistic server-client common</name>
+    <name>stats-server-client common</name>
+
+    <!-- перечислим все зависимости, которые нужны только тут -->
+
 </project>
