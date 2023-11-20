@@ -1,0 +1,4 @@
+#Зададим переменную окружения для нашего клиента
+stats:
+  server:
+    url: ${STATS_SERVER_URL:http://localhost:9090}
