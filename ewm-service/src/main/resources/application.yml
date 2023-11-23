@@ -44,7 +44,7 @@ spring:
       on-profile: default
   datasource:
     driverClassName: org.postgresql.Driver
-    url: jdbc:postgresql://localhost:5431/ewm
+    url: jdbc:postgresql://localhost:5432/ewm-main-db
     username: postgres
     password: postgres
 
@@ -77,12 +77,12 @@ spring:
       on-profile: docker
   datasource:
     driverClassName: org.postgresql.Driver
-    url: ${SPRING_DATASOURCE_URL:jdbc:postgresql://db:5431/ewm}
-    username: ${DB_USERNAME:postgres}
-    password: ${DB_PASSWORD:postgres}
+    url: ${SPRING_DATASOURCE_URL}
+    username: ${DB_USERNAME}
+    password: ${DB_PASSWORD}
 stats:
   server:
-    url: ${STATS_SERVER_URL:http://localhost:9090}
+    url: ${STATS_SERVER_URL}
 logging:
   level:
     org.springframework.orm.jpa: INFO
