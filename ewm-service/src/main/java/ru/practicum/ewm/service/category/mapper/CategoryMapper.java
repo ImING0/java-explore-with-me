@@ -12,21 +12,25 @@ import ru.practicum.ewm.service.category.model.Category;
 public class CategoryMapper {
     /**
      * Маппинг из dto в модель
+     *
      * @param categoryDtoIn dto для создания категории
      * @return модель категории
      */
     public Category toCategory(CategoryDtoIn categoryDtoIn) {
-        return Category.builder().name(categoryDtoIn.getName())
+        return Category.builder()
+                .name(categoryDtoIn.getName())
                 .build();
     }
 
     /**
      * Маппинг из модели в dto
+     *
      * @param category модель категории
      * @return dto категории
      */
     public CategoryDtoOut toDtoOut(Category category) {
-        return CategoryDtoOut.builder().id(category.getId())
+        return CategoryDtoOut.builder()
+                .id(category.getId())
                 .name(category.getName())
                 .build();
     }

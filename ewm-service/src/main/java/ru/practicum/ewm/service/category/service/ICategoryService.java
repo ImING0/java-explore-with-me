@@ -30,6 +30,7 @@ public interface ICategoryService {
 
     /**
      * Получение всех категорий
+     *
      * @param pageable параметры пагинации
      * @return список категорий
      */
@@ -37,6 +38,7 @@ public interface ICategoryService {
 
     /**
      * Получение категории по идентификатору
+     *
      * @param catId идентификатор категории
      * @return dto категории
      */

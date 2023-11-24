@@ -16,5 +16,4 @@ public class DefExceptionHandler {
         log.error(ex.getMessage());
         return ApiError.buildFromExAndHttpStatus(ex, HttpStatus.NOT_FOUND);
     }
-
 }

@@ -17,17 +17,18 @@ import javax.validation.Valid;
 @Slf4j
 public class AdminCategoryController {
     private final ICategoryService categoryService;
+
     @PostMapping
-    public ResponseEntity<CategoryDtoOut> createCategory(@RequestBody @Valid
-                                                         CategoryDtoIn categoryDtoIn) {
+    public ResponseEntity<CategoryDtoOut> createCategory(
+            @RequestBody @Valid CategoryDtoIn categoryDtoIn) {
         log.info("Creating category {}", categoryDtoIn);
         return new ResponseEntity<>(categoryService.create(categoryDtoIn), HttpStatus.CREATED);
     }
 
     @PatchMapping("/{catId}")
-    public ResponseEntity<CategoryDtoOut> updateCategory(@RequestBody @Valid
-                                                         CategoryDtoIn categoryDtoIn,
-                                                         @PathVariable Long catId) {
+    public ResponseEntity<CategoryDtoOut> updateCategory(
+            @RequestBody @Valid CategoryDtoIn categoryDtoIn,
+            @PathVariable Long catId) {
         log.info("Updating category with id {}", catId);
         return new ResponseEntity<>(categoryService.update(categoryDtoIn, catId), HttpStatus.OK);
     }
@@ -36,6 +37,7 @@ public class AdminCategoryController {
     public ResponseEntity<Void> deleteCategory(@PathVariable Long catId) {
         log.info("Deleting category with id {}", catId);
         categoryService.delete(catId);
-        return ResponseEntity.noContent().build();
+        return ResponseEntity.noContent()
+                .build();
     }
 }

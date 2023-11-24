@@ -5,7 +5,6 @@ import lombok.Data;
 import org.springframework.http.HttpStatus;
 import ru.practicum.ewm.util.DateTimeUtil;
 
-import java.text.SimpleDateFormat;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -19,12 +18,15 @@ public class ApiError {
     private Integer httpStatus; // Статус ошибки
     private String timestamp; // Время возникновения ошибки
 
-
-    public static ApiError buildFromExAndHttpStatus(Throwable ex, HttpStatus httpStatus) {
-        List<String> stackTrace = List.of(ex.getStackTrace()).stream()
-                .map(StackTraceElement::toString).collect(Collectors.toList());
+    public static ApiError buildFromExAndHttpStatus(Throwable ex,
+                                                    HttpStatus httpStatus) {
+        List<String> stackTrace = List.of(ex.getStackTrace())
+                .stream()
+                .map(StackTraceElement::toString)
+                .collect(Collectors.toList());
         String message = ex.getMessage();
-        String reason = ex.getCause() != null ? ex.getCause().toString() : "Неизвестная причина";
+        String reason = ex.getCause() != null ? ex.getCause()
+                .toString() : "Неизвестная причина";
         Integer httpStatusValue = httpStatus.value();
         String timestamp = DateTimeUtil.getLocalDateTimeAsString(LocalDateTime.now());
         return ApiError.builder()

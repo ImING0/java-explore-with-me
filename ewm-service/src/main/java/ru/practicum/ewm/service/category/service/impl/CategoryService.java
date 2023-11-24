@@ -37,7 +37,9 @@ public class CategoryService implements ICategoryService {
 
     @Override
     public List<CategoryDtoOut> getAll(Pageable pageable) {
-        return categoryRepository.findAll(pageable).stream().map(CategoryMapper::toDtoOut)
+        return categoryRepository.findAll(pageable)
+                .stream()
+                .map(CategoryMapper::toDtoOut)
                 .collect(Collectors.toList());
     }
 
