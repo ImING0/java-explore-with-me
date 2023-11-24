@@ -19,9 +19,10 @@ comment on column categories.created_on is 'Дата и время создан�
 
 create table if not exists users
 (
-    name  varchar(250) not null,
-    email varchar(254) not null,
-    id    bigint generated always as identity,
+    name       varchar(250) not null,
+    email      varchar(254) not null,
+    id         bigint generated always as identity,
+    created_on timestamp    not null,
     constraint users_id_pk
         primary key (id),
     constraint users_email_pk
@@ -29,6 +30,8 @@ create table if not exists users
     constraint check_name_email_min_length
         check ((length((name)::text) >= 2) AND (length((email)::text) >= 6))
 );
+
+comment on column users.created_on is 'Дата и время регистрации(создания) пользователя';
 
 comment on constraint check_name_email_min_length on users is 'проверка на мин длину имени и почты. Для почты 6, для имени 2';
 
@@ -74,15 +77,15 @@ create table if not exists events
     compilation_id     bigint,
     constraint events_id_pk
         primary key (id),
-    constraint events_category_categories_id_fk
-        foreign key (category_id) references categories
-            on update cascade on delete cascade,
     constraint "events_initiator_Id_users_id_fk"
         foreign key (initiator_id) references users
             on update cascade on delete cascade,
     constraint events_compilation_id_compilations_id_fk
         foreign key (compilation_id) references compilations
             on update cascade on delete set null,
+    constraint events_category_categories_id_fk
+        foreign key (category_id) references categories
+            on update cascade on delete restrict,
     constraint check_annotation_min_length
         check (length((annotation)::text) >= 20),
     constraint check_description_min_length
