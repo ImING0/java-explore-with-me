@@ -59,7 +59,6 @@ public class Event {
     @Column(name = "request_moderation", columnDefinition = "boolean default true")
     private Boolean requestModeration = true; // Нужна ли модерация заявок
     /*Компиляция*/
-    // TODO Добавить после добавления класса
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "compilation_id", nullable = false)
     private Compilation compilation;
