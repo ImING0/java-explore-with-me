@@ -21,7 +21,7 @@ public class Category {
     private Long id;
     @Column(name = "name",nullable = false ,length = 50, unique = true)
     private String name;
-    @Column(name = "created_on", nullable = false)
+    @Column(name = "created_on", nullable = false, updatable = false)
     @CreationTimestamp
     private LocalDateTime createdOn;
 

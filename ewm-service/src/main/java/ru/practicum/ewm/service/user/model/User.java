@@ -23,7 +23,7 @@ public class User {
     private String name;
     @Column(name = "email", nullable = false, length = 254, unique = true)
     private String email;
-    @Column(name = "created_on", nullable = false)
+    @Column(name = "created_on", nullable = false, updatable = false)
     @CreationTimestamp
     private LocalDateTime createdOn;
 }

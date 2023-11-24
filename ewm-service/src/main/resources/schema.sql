@@ -1,10 +1,17 @@
-create type event_state as enum ('PENDING', 'PUBLISHED', 'CANCELED');
 
+DROP TYPE IF EXISTS event_state cascade;
+DROP TYPE IF EXISTS request_status cascade;
+DROP TABLE IF EXISTS categories cascade;
+DROP TABLE IF EXISTS users CASCADE;
+DROP TABLE IF EXISTS events CASCADE ;
+DROP TABLE IF EXISTS requests CASCADE ;
+DROP TABLE IF EXISTS compilations CASCADE ;
+create type event_state as enum ('PENDING', 'PUBLISHED', 'CANCELED');
 create type request_status as enum ('PENDING', 'CONFIRMED', 'REJECTED');
 
 create table if not exists categories
 (
-    id         integer generated always as identity,
+    id         bigint generated always as identity,
     name       varchar(50) not null,
     created_on timestamp   not null,
     constraint categories_id_pk
