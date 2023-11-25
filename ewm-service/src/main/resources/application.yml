@@ -33,7 +33,7 @@ spring:
       ddl-auto: none
     properties:
       hibernate:
-        dialect: org.hibernate.dialect.PostgreSQL10Dialect
+        dialect: org.hibernate.dialect.PostgreSQLDialect # был PostgreSQL10Dialect
         format_sql: true
         show_sql: true
   sql:
@@ -50,13 +50,20 @@ spring:
 
 logging:
   level:
+    io.hypersistence: trace
+    org.hibernate.SQL: debug # не было
+    # Для логирования значений параметров, раскомментируйте следующую строку:
+    org.hibernate.type.descriptor.sql: trace # не было
+    org.springframework: debug # был info
     org.springframework.orm.jpa: INFO
     org.springframework.transaction: INFO
     org.springframework.transaction.interceptor: TRACE
     org.springframework.orm.jpa.JpaTransactionManager: INFO # был дебаг
 server:
   port: 8080
-
+stats:
+  server:
+    url: ${STATS_SERVER_URL:http://localhost:9090}
 ---
 # для тестов в контейнере
 
