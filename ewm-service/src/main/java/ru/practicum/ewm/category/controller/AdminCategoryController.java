@@ -7,7 +7,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import ru.practicum.ewm.category.dto.CategoryDtoIn;
 import ru.practicum.ewm.category.dto.CategoryDtoOut;
-import ru.practicum.ewm.category.service.ICategoryService;
+import ru.practicum.ewm.category.service.admin.ICategoryAdminService;
 
 import javax.validation.Valid;
 
@@ -16,7 +16,7 @@ import javax.validation.Valid;
 @RequiredArgsConstructor
 @Slf4j
 public class AdminCategoryController {
-    private final ICategoryService categoryService;
+    private final ICategoryAdminService categoryService;
 
     @PostMapping
     public ResponseEntity<CategoryDtoOut> createCategory(

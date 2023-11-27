@@ -8,7 +8,7 @@ import org.springframework.data.domain.Sort;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import ru.practicum.ewm.category.dto.CategoryDtoOut;
-import ru.practicum.ewm.category.service.ICategoryService;
+import ru.practicum.ewm.category.service.guest.ICategoryGuestService;
 
 import javax.validation.constraints.PositiveOrZero;
 import java.util.List;
@@ -18,7 +18,7 @@ import java.util.List;
 @RequiredArgsConstructor
 @Slf4j
 public class PublicCategoryController {
-    private final ICategoryService categoryService;
+    private final ICategoryGuestService categoryGuestService;
 
     @GetMapping
     public ResponseEntity<List<CategoryDtoOut>> getAllCategories(
@@ -26,12 +26,12 @@ public class PublicCategoryController {
             @RequestParam(name = "size", defaultValue = "10") @PositiveOrZero Integer size) {
         log.info("Getting categories from {} to {}", from, from + size);
         Pageable pageable = PageRequest.of(from / size, size, Sort.by(Sort.Direction.DESC, "id"));
-        return ResponseEntity.ok(categoryService.getAll(pageable));
+        return ResponseEntity.ok(categoryGuestService.getAll(pageable));
     }
 
     @GetMapping("/{catId}")
     public ResponseEntity<CategoryDtoOut> getCategoryById(@PathVariable Long catId) {
         log.info("Getting category with id {}", catId);
-        return ResponseEntity.ok(categoryService.getById(catId));
+        return ResponseEntity.ok(categoryGuestService.getById(catId));
     }
 }

@@ -1,15 +1,12 @@
-package ru.practicum.ewm.category.service;
+package ru.practicum.ewm.category.service.admin;
 
-import org.springframework.data.domain.Pageable;
 import ru.practicum.ewm.category.dto.CategoryDtoIn;
 import ru.practicum.ewm.category.dto.CategoryDtoOut;
-
-import java.util.List;
 
 /**
  * Сервис для работы с категориями
  */
-public interface ICategoryService {
+public interface ICategoryAdminService {
     /**
      * Создание категории
      *
@@ -27,22 +24,6 @@ public interface ICategoryService {
      */
     CategoryDtoOut update(CategoryDtoIn categoryDtoIn,
                           Long catId);
-
-    /**
-     * Получение всех категорий
-     *
-     * @param pageable параметры пагинации
-     * @return список категорий
-     */
-    List<CategoryDtoOut> getAll(Pageable pageable);
-
-    /**
-     * Получение категории по идентификатору
-     *
-     * @param catId идентификатор категории
-     * @return dto категории
-     */
-    CategoryDtoOut getById(Long catId);
 
     /**
      * Удаление категории

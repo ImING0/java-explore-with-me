@@ -1,22 +1,18 @@
-package ru.practicum.ewm.category.service.impl;
+package ru.practicum.ewm.category.service.admin.impl;
 
 import lombok.RequiredArgsConstructor;
-import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import ru.practicum.ewm.category.dto.CategoryDtoIn;
 import ru.practicum.ewm.category.dto.CategoryDtoOut;
 import ru.practicum.ewm.category.mapper.CategoryMapper;
 import ru.practicum.ewm.category.model.Category;
 import ru.practicum.ewm.category.repository.CategoryRepository;
-import ru.practicum.ewm.category.service.ICategoryService;
+import ru.practicum.ewm.category.service.admin.ICategoryAdminService;
 import ru.practicum.ewm.error.ResourceNotFoundException;
-
-import java.util.List;
-import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
-public class CategoryService implements ICategoryService {
+public class CategoryAdminService implements ICategoryAdminService {
     private final CategoryRepository categoryRepository;
 
     @Override
@@ -33,19 +29,6 @@ public class CategoryService implements ICategoryService {
         categoryToUpdate.setId(existingCategory.getId());
         categoryToUpdate.setCreatedOn(existingCategory.getCreatedOn());
         return CategoryMapper.toDtoOut(categoryRepository.save(categoryToUpdate));
-    }
-
-    @Override
-    public List<CategoryDtoOut> getAll(Pageable pageable) {
-        return categoryRepository.findAll(pageable)
-                .stream()
-                .map(CategoryMapper::toDtoOut)
-                .collect(Collectors.toList());
-    }
-
-    @Override
-    public CategoryDtoOut getById(Long catId) {
-        return CategoryMapper.toDtoOut(getCategoryOrThrow(catId));
     }
 
     @Override

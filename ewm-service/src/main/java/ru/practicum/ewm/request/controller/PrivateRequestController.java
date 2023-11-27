@@ -6,14 +6,14 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import ru.practicum.ewm.request.dto.RequestDtoOut;
-import ru.practicum.ewm.request.service.IRequestService;
+import ru.practicum.ewm.request.service.authorized.IRequestAuthorizedService;
 
 @RestController
 @RequestMapping(path = "/users/{userId}/requests")
 @RequiredArgsConstructor
 @Slf4j
 public class PrivateRequestController {
-    private final IRequestService requestService;
+    private final IRequestAuthorizedService requestService;
 
     @PostMapping
     public ResponseEntity<RequestDtoOut> createRequest(

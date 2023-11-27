@@ -1,4 +1,4 @@
-package ru.practicum.ewm.user.service.impl;
+package ru.practicum.ewm.user.service.admin.impl;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Pageable;
@@ -9,14 +9,14 @@ import ru.practicum.ewm.user.dto.UserDtoOut;
 import ru.practicum.ewm.user.mapper.UserMapper;
 import ru.practicum.ewm.user.model.User;
 import ru.practicum.ewm.user.repository.UserRepository;
-import ru.practicum.ewm.user.service.IUserService;
+import ru.practicum.ewm.user.service.admin.IUserAdminService;
 
 import java.util.List;
 import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
-public class UserService implements IUserService {
+public class UserAdminService implements IUserAdminService {
     private final UserRepository userRepository;
 
     @Override

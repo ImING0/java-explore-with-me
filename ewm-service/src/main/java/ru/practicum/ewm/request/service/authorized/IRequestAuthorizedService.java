@@ -1,11 +1,11 @@
-package ru.practicum.ewm.request.service;
+package ru.practicum.ewm.request.service.authorized;
 
 import ru.practicum.ewm.request.dto.RequestDtoOut;
 
 /**
  * Сервис запросов на участие в мероприятии
  */
-public interface IRequestService {
+public interface IRequestAuthorizedService {
     /**
      * Создание запроса на участие в мероприятии
      *

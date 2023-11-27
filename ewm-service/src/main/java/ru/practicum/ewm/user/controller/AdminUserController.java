@@ -10,7 +10,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import ru.practicum.ewm.user.dto.UserDtoIn;
 import ru.practicum.ewm.user.dto.UserDtoOut;
-import ru.practicum.ewm.user.service.IUserService;
+import ru.practicum.ewm.user.service.admin.IUserAdminService;
 
 import javax.validation.Valid;
 import javax.validation.constraints.PositiveOrZero;
@@ -21,7 +21,7 @@ import java.util.List;
 @RequiredArgsConstructor
 @Slf4j
 public class AdminUserController {
-    private final IUserService userService;
+    private final IUserAdminService userService;
 
     @PostMapping
     public ResponseEntity<UserDtoOut> createUser(@RequestBody @Valid UserDtoIn userDtoIn) {
