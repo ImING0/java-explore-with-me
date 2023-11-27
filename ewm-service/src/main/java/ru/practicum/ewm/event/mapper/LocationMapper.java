@@ -1,7 +1,7 @@
 package ru.practicum.ewm.event.mapper;
 
 import lombok.experimental.UtilityClass;
-import ru.practicum.ewm.event.dto.LocationDtoOut;
+import ru.practicum.ewm.event.dto.LocationDto;
 import ru.practicum.ewm.event.model.Location;
 
 /**
@@ -10,13 +10,13 @@ import ru.practicum.ewm.event.model.Location;
 @UtilityClass
 public class LocationMapper {
     /**
-     * Метод преобразования объекта Location в LocationDtoOut
+     * Метод преобразования объекта Location в LocationDto
      *
      * @param location - объект Location
-     * @return объект LocationDtoOut
+     * @return объект LocationDto
      */
-    public LocationDtoOut toDtoOut(Location location) {
-        return LocationDtoOut.builder()
+    public LocationDto toDtoOut(Location location) {
+        return LocationDto.builder()
                 .lat(location.getLat())
                 .lon(location.getLon())
                 .build();

@@ -1,22 +1,26 @@
-package ru.practicum.ewm.event.service.impl;
+package ru.practicum.ewm.event.service.authorized.impl;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import ru.practicum.ewm.category.model.Category;
 import ru.practicum.ewm.category.repository.CategoryRepository;
+import ru.practicum.ewm.error.DataConflictException;
 import ru.practicum.ewm.error.ResourceNotFoundException;
 import ru.practicum.ewm.event.dto.EventFullDtoOut;
 import ru.practicum.ewm.event.dto.NewEventDtoIn;
 import ru.practicum.ewm.event.mapper.EventMapper;
 import ru.practicum.ewm.event.model.Event;
 import ru.practicum.ewm.event.repository.EventRepository;
-import ru.practicum.ewm.event.service.IEventService;
+import ru.practicum.ewm.event.service.authorized.IEventAuthorizedService;
 import ru.practicum.ewm.user.model.User;
 import ru.practicum.ewm.user.repository.UserRepository;
 
+import java.time.Duration;
+import java.time.LocalDateTime;
+
 @Service
 @RequiredArgsConstructor
-public class EventService implements IEventService {
+public class EventAuthorizedService implements IEventAuthorizedService {
     private final UserRepository userRepository;
     private final CategoryRepository categoryRepository;
     private final EventRepository eventRepository;
@@ -26,6 +30,7 @@ public class EventService implements IEventService {
                                   Long userId) {
         User initiator = getUserOrThrow(userId);
         Category category = getCategoryOrThrow(newEventDtoIn.getCategory());
+        checkEventBeforeCreate(newEventDtoIn);
         /* Хотел сначала сделать тут запросы к серверу статистике через клиент, но потом понял,
         что это не имеет смысла, так как при создании и так всё по нулям.*/
         Long views = 0L;
@@ -46,5 +51,22 @@ public class EventService implements IEventService {
         return categoryRepository.findById(categoryId)
                 .orElseThrow(() -> new ResourceNotFoundException(
                         String.format("Category with id %d not found", categoryId)));
+    }
+
+    private void checkEventBeforeCreate(NewEventDtoIn newEventDtoIn) {
+        /*дата и время на которые намечено событие не может быть раньше,
+         чем через два часа от текущего момента*/
+
+        /*Сначала думал задать минус пару секунд из расчета задержек соединения
+         * но потом решил, что на фронте то будут числа кратные минутам и тп,
+         * так то решил опустить этот момент.*/
+        LocalDateTime currentDateTime = LocalDateTime.now();
+        LocalDateTime eventDateTime = newEventDtoIn.getEventDate();
+        Duration duration = Duration.between(currentDateTime, eventDateTime);
+        if (duration.toHours() < 2) {
+            throw new DataConflictException(String.format(
+                    "Event date and time must be at least 2 hours from now, but it's %s",
+                    eventDateTime.toString()));
+        }
     }
 }

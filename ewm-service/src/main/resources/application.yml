@@ -50,10 +50,10 @@ spring:
 
 logging:
   level:
-    io.hypersistence: trace
-    org.hibernate.SQL: debug # не было
+    #io.hypersistence: trace
+    #org.hibernate.SQL: debug # не было
     # Для логирования значений параметров, раскомментируйте следующую строку:
-    org.hibernate.type.descriptor.sql: trace # не было
+    #org.hibernate.type.descriptor.sql: trace # не было
     org.springframework: debug # был info
     org.springframework.orm.jpa: INFO
     org.springframework.transaction: INFO

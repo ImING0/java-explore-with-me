@@ -7,7 +7,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import ru.practicum.ewm.event.dto.EventFullDtoOut;
 import ru.practicum.ewm.event.dto.NewEventDtoIn;
-import ru.practicum.ewm.event.service.IEventService;
+import ru.practicum.ewm.event.service.authorized.IEventAuthorizedService;
 
 import javax.validation.Valid;
 
@@ -16,7 +16,7 @@ import javax.validation.Valid;
 @RequiredArgsConstructor
 @Slf4j
 public class PrivateEventController {
-    private final IEventService eventService;
+    private final IEventAuthorizedService eventService;
 
     @PostMapping
     public ResponseEntity<EventFullDtoOut> createNewEvent(@PathVariable("userId") Long userId,

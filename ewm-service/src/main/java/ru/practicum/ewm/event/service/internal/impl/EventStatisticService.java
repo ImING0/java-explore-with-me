@@ -1,8 +1,8 @@
-package ru.practicum.ewm.event.service.impl;
+package ru.practicum.ewm.event.service.internal.impl;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
-import ru.practicum.ewm.event.service.IEventStatisticService;
+import ru.practicum.ewm.event.service.internal.IEventStatisticService;
 
 @Service
 @RequiredArgsConstructor

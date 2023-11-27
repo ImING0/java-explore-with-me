@@ -33,7 +33,7 @@ public class EventFullDtoOut {
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = DateTimeUtil.DATE_TIME_FORMAT)
     private LocalDateTime publishedOn; //Дата публикации
     /*Координаты проведения события*/
-    private LocationDtoOut location;
+    private LocationDto location;
     /*Булевы значения*/
     private Boolean paid;
     private Boolean requestModeration;
