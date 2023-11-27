@@ -12,7 +12,7 @@ import ru.practicum.ewm.request.service.authorized.IRequestAuthorizedService;
 @RequestMapping(path = "/users/{userId}/requests")
 @RequiredArgsConstructor
 @Slf4j
-public class PrivateRequestController {
+public class AuthorizedRequestController {
     private final IRequestAuthorizedService requestService;
 
     @PostMapping

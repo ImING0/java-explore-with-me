@@ -15,7 +15,7 @@ import javax.validation.Valid;
 @RequestMapping("/users/{userId}/events")
 @RequiredArgsConstructor
 @Slf4j
-public class PrivateEventController {
+public class AuthorizedEventController {
     private final IEventAuthorizedService eventService;
 
     @PostMapping
