@@ -19,9 +19,9 @@ public class AuthorizedEventController {
     private final IEventAuthorizedService eventService;
 
     @PostMapping
-    public ResponseEntity<EventFullDtoOut> createNewEvent(@PathVariable("userId") Long userId,
-                                                          @RequestBody
-                                                          @Valid NewEventDtoIn newEventDtoIn) {
+    public ResponseEntity<EventFullDtoOut> createEvent(@PathVariable("userId") Long userId,
+                                                       @RequestBody
+                                                       @Valid NewEventDtoIn newEventDtoIn) {
         log.info("Creating new event for user with id {}", userId);
         return new ResponseEntity<>(eventService.create(newEventDtoIn, userId), HttpStatus.CREATED);
     }

@@ -44,6 +44,9 @@ public class Event {
     @Column(name = "participant_limit", nullable = false)
     @Builder.Default
     private Integer participantLimit = 0; //Лимит участников (0 - нет лимита)
+    @Column(name = "confirmed_requests", nullable = false)
+    @Builder.Default
+    private Long confirmedRequests = 0L; // Количество одобренных заявок на участие в данном событии
     @Column(name = "state", nullable = false)
     @Enumerated(EnumType.STRING)
     @Type(type = "pgsql_enum")
@@ -73,5 +76,6 @@ public class Event {
     private Compilation compilation;
     /*Просмотры*/
     @Column(name = "views", nullable = false)
-    private Long views;
+    @Builder.Default
+    private Long views = 0L;
 }

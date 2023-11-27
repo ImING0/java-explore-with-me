@@ -34,6 +34,7 @@ public class EventMapper {
                 .initiator(user)
                 .category(category)
                 .participantLimit(newEventDtoIn.getParticipantLimit())
+                .confirmedRequests(0L) //при создании события количество одобренных заявок равно 0
                 .state(EventState.PENDING)
                 .eventDate(newEventDtoIn.getEventDate())
                 .location(Location.builder()
@@ -44,7 +45,7 @@ public class EventMapper {
                         .build())
                 .paid(newEventDtoIn.getPaid())
                 .requestModeration(newEventDtoIn.getRequestModeration())
-                .views(0L)
+                .views(0L) //при создании события количество просмотров равно 0
                 .build();
     }
 

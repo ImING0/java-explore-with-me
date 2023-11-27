@@ -8,6 +8,8 @@ DROP TABLE IF EXISTS compilations CASCADE;
 create type event_state as enum ('PENDING', 'PUBLISHED', 'CANCELED');
 create type request_status as enum ('PENDING', 'CONFIRMED', 'REJECTED');
 
+
+
 create table if not exists categories
 (
     id         bigint generated always as identity,
@@ -74,6 +76,7 @@ create table if not exists events
     lon                double precision      not null,
     paid               boolean default false not null,
     participant_limit  integer default 0     not null,
+    confirmed_requests bigint  default 0     not null,
     request_moderation boolean default true  not null,
     title              varchar(120)          not null,
     created_on         timestamp             not null,
@@ -168,4 +171,3 @@ comment on column requests.status is 'Статус заявки';
 comment on constraint requests_requester_id_users_id_fk on requests is 'Ограничение внешнего ключа по таблице пользователей';
 
 comment on constraint requests_event_id_events_id_fk on requests is 'Ограничение по внешнему ключу id таблицы event';
-
