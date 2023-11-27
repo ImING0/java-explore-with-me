@@ -31,14 +31,10 @@ public class EventAuthorizedService implements IEventAuthorizedService {
         User initiator = getUserOrThrow(userId);
         Category category = getCategoryOrThrow(newEventDtoIn.getCategory());
         checkEventBeforeCreate(newEventDtoIn);
-        /* Хотел сначала сделать тут запросы к серверу статистике через клиент, но потом понял,
-        что это не имеет смысла, так как при создании и так всё по нулям.*/
-        Long views = 0L;
         Long confirmedRequests = 0L;
         Event eventToSave = EventMapper.toEvent(newEventDtoIn, initiator, category);
         System.out.println(eventToSave);
-        return EventMapper.toEventFullDtoOut(eventRepository.save(eventToSave), views,
-                confirmedRequests);
+        return EventMapper.toEventFullDtoOut(eventRepository.save(eventToSave), confirmedRequests);
     }
 
     private User getUserOrThrow(Long userId) {

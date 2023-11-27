@@ -44,6 +44,7 @@ public class EventMapper {
                         .build())
                 .paid(newEventDtoIn.getPaid())
                 .requestModeration(newEventDtoIn.getRequestModeration())
+                .views(0L)
                 .build();
     }
 
@@ -51,12 +52,10 @@ public class EventMapper {
      * Метод для преобразования сущности Event в EventFullDtoOut
      *
      * @param event             событие
-     * @param views             количество просмотров
      * @param confirmedRequests количество одобренных заявок на участие в данном событии
      * @return EventFullDtoOut
      */
     public EventFullDtoOut toEventFullDtoOut(Event event,
-                                             Long views,
                                              Long confirmedRequests) {
         return EventFullDtoOut.builder()
                 .id(event.getId())
@@ -67,7 +66,7 @@ public class EventMapper {
                 .category(CategoryMapper.toDtoOut(event.getCategory()))
                 .participantLimit(event.getParticipantLimit())
                 .state(event.getState())
-                .views(views)
+                .views(event.getViews())
                 .confirmedRequests(confirmedRequests)
                 .eventDate(event.getEventDate())
                 .createdOn(event.getCreatedOn())

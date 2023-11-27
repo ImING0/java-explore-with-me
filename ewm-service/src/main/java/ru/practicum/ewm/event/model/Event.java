@@ -71,4 +71,7 @@ public class Event {
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "compilation_id")
     private Compilation compilation;
+    /*Просмотры*/
+    @Column(name = "views", nullable = false)
+    private Long views;
 }

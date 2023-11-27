@@ -1,11 +1,10 @@
-
 DROP TYPE IF EXISTS event_state cascade;
 DROP TYPE IF EXISTS request_status cascade;
 DROP TABLE IF EXISTS categories cascade;
 DROP TABLE IF EXISTS users CASCADE;
-DROP TABLE IF EXISTS events CASCADE ;
-DROP TABLE IF EXISTS requests CASCADE ;
-DROP TABLE IF EXISTS compilations CASCADE ;
+DROP TABLE IF EXISTS events CASCADE;
+DROP TABLE IF EXISTS requests CASCADE;
+DROP TABLE IF EXISTS compilations CASCADE;
 create type event_state as enum ('PENDING', 'PUBLISHED', 'CANCELED');
 create type request_status as enum ('PENDING', 'CONFIRMED', 'REJECTED');
 
@@ -82,6 +81,7 @@ create table if not exists events
     published_on       timestamp,
     state              event_state           not null,
     compilation_id     bigint,
+    views              bigint                not null,
     constraint events_id_pk
         primary key (id),
     constraint "events_initiator_Id_users_id_fk"
