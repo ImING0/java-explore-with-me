@@ -1,7 +1,7 @@
 package ru.practicum.ewm.event.mapper;
 
 import lombok.experimental.UtilityClass;
-import ru.practicum.ewm.event.dto.LocationDto;
+import ru.practicum.ewm.event.dto.event.LocationDto;
 import ru.practicum.ewm.event.model.Location;
 
 /**

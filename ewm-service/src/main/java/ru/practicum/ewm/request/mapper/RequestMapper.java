@@ -1,11 +1,15 @@
 package ru.practicum.ewm.request.mapper;
 
 import lombok.experimental.UtilityClass;
+import ru.practicum.ewm.event.dto.request.EventRequestStatusUpdDtoOut;
 import ru.practicum.ewm.event.model.Event;
 import ru.practicum.ewm.request.dto.RequestDtoOut;
 import ru.practicum.ewm.request.model.Request;
 import ru.practicum.ewm.request.model.RequestStatus;
 import ru.practicum.ewm.user.model.User;
+
+import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * Маппер запросов на участие в мероприятии
@@ -43,6 +47,19 @@ public class RequestMapper {
                         .getId())
                 .status(request.getStatus())
                 .created(request.getCreatedOn())
+                .build();
+    }
+
+    public EventRequestStatusUpdDtoOut toEventRequestStatusUpdDtoOut(List<Request> requests) {
+        return EventRequestStatusUpdDtoOut.builder()
+                .confirmedRequests(requests.stream()
+                        .filter(request -> request.getStatus() == RequestStatus.CONFIRMED)
+                        .map(RequestMapper::toRequestDtoOut)
+                        .collect(Collectors.toList()))
+                .rejectedRequests(requests.stream()
+                        .filter(request -> request.getStatus() == RequestStatus.REJECTED)
+                        .map(RequestMapper::toRequestDtoOut)
+                        .collect(Collectors.toList()))
                 .build();
     }
 }

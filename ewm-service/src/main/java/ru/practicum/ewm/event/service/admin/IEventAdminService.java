@@ -2,8 +2,8 @@ package ru.practicum.ewm.event.service.admin;
 
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
-import ru.practicum.ewm.event.dto.EventAdminReqDtoIn;
-import ru.practicum.ewm.event.dto.EventFullDtoOut;
+import ru.practicum.ewm.event.dto.event.EventAdminUpdDtoIn;
+import ru.practicum.ewm.event.dto.event.EventFullDtoOut;
 import ru.practicum.ewm.event.model.EventState;
 
 import java.time.LocalDateTime;
@@ -18,11 +18,11 @@ public interface IEventAdminService {
     /**
      * Метод для обновления события администратором
      *
-     * @param eventAdminReqDtoIn данные для обновления события
+     * @param eventAdminUpdDtoIn данные для обновления события
      * @param eventId            id события
      * @return EventFullDtoOut
      */
-    EventFullDtoOut update(EventAdminReqDtoIn eventAdminReqDtoIn,
+    EventFullDtoOut update(EventAdminUpdDtoIn eventAdminUpdDtoIn,
                            Long eventId);
 
     /**

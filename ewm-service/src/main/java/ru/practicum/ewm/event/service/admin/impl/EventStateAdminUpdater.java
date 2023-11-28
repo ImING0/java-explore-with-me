@@ -2,14 +2,14 @@ package ru.practicum.ewm.event.service.admin.impl;
 
 import lombok.experimental.UtilityClass;
 import ru.practicum.ewm.error.DataConflictException;
-import ru.practicum.ewm.event.dto.EventAdminReqDtoIn;
+import ru.practicum.ewm.event.dto.event.EventAdminUpdDtoIn;
 import ru.practicum.ewm.event.model.Event;
 import ru.practicum.ewm.event.model.EventState;
 
 @UtilityClass
 class EventStateAdminUpdater {
     public void updateEventStateInternal(Event existingEvent,
-                                         EventAdminReqDtoIn updatedEvent) {
+                                         EventAdminUpdDtoIn updatedEvent) {
         if (updatedEvent.getStateAction() != null) {
             switch (existingEvent.getState()) {
                 case PENDING:

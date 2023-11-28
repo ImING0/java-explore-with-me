@@ -2,10 +2,10 @@ package ru.practicum.ewm.event.service.admin.impl;
 
 import lombok.experimental.UtilityClass;
 import ru.practicum.ewm.error.DataConflictException;
-import ru.practicum.ewm.event.dto.EventAdminReqDtoIn;
+import ru.practicum.ewm.event.dto.event.EventAdminUpdDtoIn;
+import ru.practicum.ewm.event.dto.event.StateAdminAction;
 import ru.practicum.ewm.event.model.Event;
 import ru.practicum.ewm.event.model.EventState;
-import ru.practicum.ewm.event.model.StateAction;
 
 import java.time.Duration;
 import java.time.LocalDateTime;
@@ -29,8 +29,8 @@ class EventDateAdminUpdater {
     }
 
     public void updateEventDateTimeInternal(Event existingEvent,
-                                            EventAdminReqDtoIn updatedEvent) {
-        StateAction newState = updatedEvent.getStateAction();
+                                            EventAdminUpdDtoIn updatedEvent) {
+        StateAdminAction newState = updatedEvent.getStateAction();
         EventState currentState = existingEvent.getState();
         LocalDateTime existingEventDateTime = existingEvent.getEventDate();
         LocalDateTime updatedEventDateTime = updatedEvent.getEventDate();

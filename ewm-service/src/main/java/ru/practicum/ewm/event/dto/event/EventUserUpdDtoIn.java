@@ -1,11 +1,10 @@
-package ru.practicum.ewm.event.dto;
+package ru.practicum.ewm.event.dto.event;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import ru.practicum.ewm.event.model.StateAction;
 import ru.practicum.ewm.util.DateTimeUtil;
 
 import javax.validation.constraints.Future;
@@ -13,14 +12,14 @@ import javax.validation.constraints.Size;
 import java.time.LocalDateTime;
 
 /**
- * DTO запроса на обновление мероприятия администратором
- * если поле null, то оно не будет обновлено
+ * DTO для обновления события пользователем с ролью пользователь
+ * если поле не передано, то оно не будет обновлено
  */
-@Data
 @Builder
+@Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class EventAdminReqDtoIn {
+public class EventUserUpdDtoIn {
     @Size(min = 3, max = 120, message = "Title must be between 3 and 120 characters")
     private String title;
     @Size(min = 20, max = 2000)
@@ -32,7 +31,7 @@ public class EventAdminReqDtoIn {
     @Future
     private LocalDateTime eventDate;
     private LocationDto location;
-    private StateAction stateAction; // что сделать с событием
+    private StateUserAction stateAction; // что сделать с событием
     private Boolean paid;
     private Boolean requestModeration;
     private Integer participantLimit;

@@ -8,8 +8,8 @@ import org.springframework.transaction.annotation.Transactional;
 import ru.practicum.ewm.category.model.Category;
 import ru.practicum.ewm.category.repository.CategoryRepository;
 import ru.practicum.ewm.error.ResourceNotFoundException;
-import ru.practicum.ewm.event.dto.EventAdminReqDtoIn;
-import ru.practicum.ewm.event.dto.EventFullDtoOut;
+import ru.practicum.ewm.event.dto.event.EventAdminUpdDtoIn;
+import ru.practicum.ewm.event.dto.event.EventFullDtoOut;
 import ru.practicum.ewm.event.mapper.EventMapper;
 import ru.practicum.ewm.event.model.Event;
 import ru.practicum.ewm.event.model.EventState;
@@ -30,12 +30,12 @@ public class EventAdminService implements IEventAdminService {
 
     @Override
     @Transactional
-    public EventFullDtoOut update(EventAdminReqDtoIn eventAdminReqDtoIn,
+    public EventFullDtoOut update(EventAdminUpdDtoIn eventAdminUpdDtoIn,
                                   Long eventId) {
         Event existingEvent = getEventOrThrow(eventId);
-        Event eventToUpdate = updateEventInternal(existingEvent, eventAdminReqDtoIn);
+        Event eventToUpdate = updateEventInternal(existingEvent, eventAdminUpdDtoIn);
         System.out.println(eventToUpdate);
-        return EventMapper.toEventFullDtoOut(eventRepository.save(eventToUpdate), 0L);
+        return EventMapper.toEventFullDtoOut(eventRepository.save(eventToUpdate));
     }
 
     @Override
@@ -48,7 +48,7 @@ public class EventAdminService implements IEventAdminService {
         return eventRepository.findAllByInitiator_IdInAndStateInAndCategory_IdInAndEventDateBetween(
                         users, states, categories, rangeStart, rangeEnd, pageable)
                 .stream()
-                .map(event -> EventMapper.toEventFullDtoOut(event, 0L))
+                .map(EventMapper::toEventFullDtoOut)
                 .collect(Collectors.toList());
     }
 
@@ -59,7 +59,7 @@ public class EventAdminService implements IEventAdminService {
     }
 
     private Event updateEventInternal(Event existingEvent,
-                                      EventAdminReqDtoIn updatedEvent) {
+                                      EventAdminUpdDtoIn updatedEvent) {
         EventDateAdminUpdater.updateEventDateTimeInternal(existingEvent, updatedEvent);
         EventStateAdminUpdater.updateEventStateInternal(existingEvent, updatedEvent);
 

@@ -2,6 +2,8 @@ package ru.practicum.ewm.request.service.authorized;
 
 import ru.practicum.ewm.request.dto.RequestDtoOut;
 
+import java.util.List;
+
 /**
  * Сервис запросов на участие в мероприятии
  */
@@ -15,4 +17,15 @@ public interface IRequestAuthorizedService {
      */
     RequestDtoOut create(Long userId,
                          Long eventId);
+
+    /**
+     * Получение всех запросов на участие в мероприятии для пользователя
+     *
+     * @param userId id пользователя
+     * @return список всех запросов на участие в мероприятии для пользователя
+     */
+    List<RequestDtoOut> getAllForCurrentUser(Long userId);
+
+    RequestDtoOut cancel(Long userId,
+                         Long requestId);
 }

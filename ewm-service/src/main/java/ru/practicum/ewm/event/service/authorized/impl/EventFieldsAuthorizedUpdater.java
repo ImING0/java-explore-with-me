@@ -1,14 +1,15 @@
-package ru.practicum.ewm.event.service.admin.impl;
+package ru.practicum.ewm.event.service.authorized.impl;
 
 import lombok.experimental.UtilityClass;
 import ru.practicum.ewm.category.model.Category;
-import ru.practicum.ewm.event.dto.event.EventAdminUpdDtoIn;
+import ru.practicum.ewm.event.dto.event.EventUserUpdDtoIn;
 import ru.practicum.ewm.event.model.Event;
 
 @UtilityClass
-class EventFieldsAdminUpdater {
+public class EventFieldsAuthorizedUpdater {
+
     public void updateEventFieldsInternal(Event existingEvent,
-                                          EventAdminUpdDtoIn updatedEvent,
+                                          EventUserUpdDtoIn updatedEvent,
                                           Category newCategory) {
         existingEvent.setTitle(updatedEvent.getTitle() != null ? updatedEvent.getTitle()
                 : existingEvent.getTitle());

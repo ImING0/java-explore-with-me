@@ -8,8 +8,8 @@ import org.springframework.data.domain.Sort;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import ru.practicum.ewm.event.dto.EventAdminReqDtoIn;
-import ru.practicum.ewm.event.dto.EventFullDtoOut;
+import ru.practicum.ewm.event.dto.event.EventAdminUpdDtoIn;
+import ru.practicum.ewm.event.dto.event.EventFullDtoOut;
 import ru.practicum.ewm.event.model.EventState;
 import ru.practicum.ewm.event.service.admin.IEventAdminService;
 import ru.practicum.ewm.util.DateTimeUtil;
@@ -31,9 +31,9 @@ public class AdminEventController {
     @PatchMapping("/{eventId}")
     public ResponseEntity<EventFullDtoOut> updateEvent(
             @PathVariable(name = "eventId", required = true) Long eventId,
-            @RequestBody @Valid EventAdminReqDtoIn eventAdminReqDtoIn) {
-        log.info("updateEvent: eventId={}, eventAdminReqDtoIn={}", eventId, eventAdminReqDtoIn);
-        return ResponseEntity.ok(eventAdminService.update(eventAdminReqDtoIn, eventId));
+            @RequestBody @Valid EventAdminUpdDtoIn eventAdminUpdDtoIn) {
+        log.info("updateEvent: eventId={}, eventAdminUpdDtoIn={}", eventId, eventAdminUpdDtoIn);
+        return ResponseEntity.ok(eventAdminService.update(eventAdminUpdDtoIn, eventId));
     }
 
     @GetMapping

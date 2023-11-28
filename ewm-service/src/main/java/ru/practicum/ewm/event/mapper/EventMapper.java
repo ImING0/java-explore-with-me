@@ -3,8 +3,9 @@ package ru.practicum.ewm.event.mapper;
 import lombok.experimental.UtilityClass;
 import ru.practicum.ewm.category.mapper.CategoryMapper;
 import ru.practicum.ewm.category.model.Category;
-import ru.practicum.ewm.event.dto.EventFullDtoOut;
-import ru.practicum.ewm.event.dto.NewEventDtoIn;
+import ru.practicum.ewm.event.dto.event.EventFullDtoOut;
+import ru.practicum.ewm.event.dto.event.EventShortDtoOut;
+import ru.practicum.ewm.event.dto.event.NewEventDtoIn;
 import ru.practicum.ewm.event.model.Event;
 import ru.practicum.ewm.event.model.EventState;
 import ru.practicum.ewm.event.model.Location;
@@ -52,12 +53,10 @@ public class EventMapper {
     /**
      * Метод для преобразования сущности Event в EventFullDtoOut
      *
-     * @param event             событие
-     * @param confirmedRequests количество одобренных заявок на участие в данном событии
+     * @param event событие
      * @return EventFullDtoOut
      */
-    public EventFullDtoOut toEventFullDtoOut(Event event,
-                                             Long confirmedRequests) {
+    public EventFullDtoOut toEventFullDtoOut(Event event) {
         return EventFullDtoOut.builder()
                 .id(event.getId())
                 .title(event.getTitle())
@@ -68,13 +67,27 @@ public class EventMapper {
                 .participantLimit(event.getParticipantLimit())
                 .state(event.getState())
                 .views(event.getViews())
-                .confirmedRequests(confirmedRequests)
+                .confirmedRequests(event.getConfirmedRequests())
                 .eventDate(event.getEventDate())
                 .createdOn(event.getCreatedOn())
                 .publishedOn(event.getPublishedOn())
                 .location(LocationMapper.toDtoOut(event.getLocation()))
                 .paid(event.getPaid())
                 .requestModeration(event.getRequestModeration())
+                .build();
+    }
+
+    public EventShortDtoOut toEventShortDtoOut(Event event) {
+        return EventShortDtoOut.builder()
+                .id(event.getId())
+                .title(event.getTitle())
+                .annotation(event.getAnnotation())
+                .category(CategoryMapper.toDtoOut(event.getCategory()))
+                .initiator(UserMapper.toUserShortDtoOut(event.getInitiator()))
+                .eventDate(event.getEventDate())
+                .confirmedRequests(event.getConfirmedRequests())
+                .views(event.getViews())
+                .paid(event.getPaid())
                 .build();
     }
 }
