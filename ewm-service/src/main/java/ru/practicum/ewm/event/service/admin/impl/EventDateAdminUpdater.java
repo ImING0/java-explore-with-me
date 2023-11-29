@@ -61,6 +61,7 @@ class EventDateAdminUpdater {
                             existingEvent.setEventDate(updatedEventDateTime);
                             break;
                     }
+                    break;
                 case PUBLISHED:
                     /*Если событие опубликовано, то ставим запрет на какое - либо изменение даты и
                     времени*/
@@ -122,6 +123,7 @@ class EventDateAdminUpdater {
                             /*Оставляем без изменений*/
                             break;
                     }
+                    break;
                 case PUBLISHED:
                     switch (newState) {
                         case PUBLISH_EVENT:

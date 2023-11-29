@@ -15,6 +15,9 @@ class EventFieldsAdminUpdater {
         existingEvent.setAnnotation(
                 updatedEvent.getAnnotation() != null ? updatedEvent.getAnnotation()
                         : existingEvent.getAnnotation());
+        existingEvent.setDescription(
+                updatedEvent.getDescription() != null ? updatedEvent.getDescription()
+                        : existingEvent.getDescription());
         existingEvent.setCategory(newCategory);
         existingEvent.setEventDate(updatedEvent.getEventDate() != null ? updatedEvent.getEventDate()
                 : existingEvent.getEventDate());
