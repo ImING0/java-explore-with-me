@@ -32,7 +32,6 @@ import java.time.LocalDateTime;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
-import java.util.concurrent.atomic.AtomicReference;
 import java.util.stream.Collectors;
 
 @Service
@@ -132,38 +131,33 @@ public class EventAuthorizedService implements IEventAuthorizedService {
 
         /*статус можно изменить только у заявок, находящихся в состоянии ожидания
          (Ожидается код ошибки 409)*/
-        List<Request> badRequests = requests.stream()
+        List<RequestDtoOut> badRequests = requests.stream()
                 .filter(request -> !request.getStatus()
                         .equals(RequestStatus.PENDING))
+                .map(RequestMapper::toRequestDtoOut)
                 .collect(Collectors.toList());
         if (!badRequests.isEmpty()) {
             throw new DataConflictException(String.format(
                     "Requests with ids %s can't be updated, because they are not in pending state",
-                    badRequests.stream()
-                            .map(Request::getId)
-                            .collect(Collectors.toSet())));
+                    badRequests));
         }
 
         /*если при подтверждении данной заявки, лимит заявок для события исчерпан,
          то все неподтверждённые заявки необходимо отклонить
          ТЗ настолько неоднозначно, ну ок...*/
-        AtomicReference<Long> remainingLimit = new AtomicReference<>(
-                participantLimit - currentConfirmedRequests);
-        RequestStatus requestStatusToUpdate;
-        if (eventRequestStatusUpdDtoIn.getStatus()
-                .equals(RequestStatusUserUpdDtoIn.CONFIRMED)) {
-            requestStatusToUpdate = RequestStatus.CONFIRMED;
-        } else {
-            requestStatusToUpdate = RequestStatus.REJECTED;
-        }
-        requests.forEach(request -> {
-            if (remainingLimit.get() != 0) {
+        long remainingLimit = participantLimit - currentConfirmedRequests;
+        RequestStatus requestStatusToUpdate = eventRequestStatusUpdDtoIn.getStatus()
+                .equals(RequestStatusUserUpdDtoIn.CONFIRMED) ? RequestStatus.CONFIRMED
+                : RequestStatus.REJECTED;
+
+        for (Request request : requests) {
+            if (remainingLimit > 0) {
                 request.setStatus(requestStatusToUpdate);
-                remainingLimit.getAndSet(remainingLimit.get() - 1);
+                remainingLimit--;
             } else {
                 request.setStatus(RequestStatus.REJECTED);
             }
-        });
+        }
         return RequestMapper.toEventRequestStatusUpdDtoOut(requestRepository.saveAll(requests));
     }
 
