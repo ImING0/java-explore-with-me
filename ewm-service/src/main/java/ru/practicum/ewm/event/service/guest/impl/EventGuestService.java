@@ -7,9 +7,12 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import ru.practicum.ewm.error.ResourceNotFoundException;
 import ru.practicum.ewm.event.Util.SortByForEvent;
+import ru.practicum.ewm.event.dto.event.EventFullDtoOut;
 import ru.practicum.ewm.event.dto.event.EventShortDtoOut;
 import ru.practicum.ewm.event.mapper.EventMapper;
+import ru.practicum.ewm.event.model.Event;
 import ru.practicum.ewm.event.model.EventState;
 import ru.practicum.ewm.event.model.QEvent;
 import ru.practicum.ewm.event.repository.EventRepository;
@@ -24,6 +27,18 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 public class EventGuestService implements IEventGuestService {
     private final EventRepository eventRepository;
+
+    @Override
+    public EventFullDtoOut getById(Long id) {
+        QEvent event = QEvent.event;
+        BooleanExpression predicate = event.isNotNull();
+        predicate = predicate.and(event.id.eq(id))
+                .and(event.state.eq(EventState.PUBLISHED));
+        Event existingEvent = eventRepository.findOne(predicate)
+                .orElseThrow(() -> new ResourceNotFoundException(
+                        String.format("Event with id %d not found", id)));
+        return EventMapper.toEventFullDtoOut(existingEvent);
+    }
 
     @Override
     @Transactional

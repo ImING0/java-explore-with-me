@@ -6,7 +6,7 @@ DROP TABLE IF EXISTS events CASCADE;
 DROP TABLE IF EXISTS requests CASCADE;
 DROP TABLE IF EXISTS compilations CASCADE;
 create type event_state as enum ('PENDING', 'PUBLISHED', 'CANCELED');
-create type request_status as enum ('PENDING', 'CONFIRMED', 'REJECTED');
+create type request_status as enum ('PENDING', 'CONFIRMED', 'REJECTED', 'CANCELED');
 
 
 

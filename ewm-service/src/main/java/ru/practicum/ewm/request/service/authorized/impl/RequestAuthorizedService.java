@@ -16,7 +16,6 @@ import ru.practicum.ewm.request.service.authorized.IRequestAuthorizedService;
 import ru.practicum.ewm.user.model.User;
 import ru.practicum.ewm.user.repository.UserRepository;
 
-import java.time.LocalDateTime;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -51,7 +50,7 @@ public class RequestAuthorizedService implements IRequestAuthorizedService {
         User user = getUserOrThrow(requesterId);
         Request existingRequest = getRequestOrThrow(requestId);
         checkRequestBeforeCancel(existingRequest, user);
-        existingRequest.setStatus(RequestStatus.REJECTED);
+        existingRequest.setStatus(RequestStatus.CANCELED);
         return RequestMapper.toRequestDtoOut(requestRepository.save(existingRequest));
     }
 
@@ -90,14 +89,14 @@ public class RequestAuthorizedService implements IRequestAuthorizedService {
                     requester.getId(), request.getId()));
         }
         /*Проверяем что событие еще не закончилось*/
-        if (request.getEvent()
+        /*if (request.getEvent()
                 .getEventDate()
                 .isBefore(LocalDateTime.now())) {
             throw new DataConflictException(String.format(
                     "User with id %d can't cancel request with id %d because event with id %d is already finished",
                     requester.getId(), request.getId(), request.getEvent()
                             .getId()));
-        }
+        }*/
     }
 
     /**

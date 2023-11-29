@@ -4,11 +4,9 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import ru.practicum.ewm.event.Util.SortByForEvent;
+import ru.practicum.ewm.event.dto.event.EventFullDtoOut;
 import ru.practicum.ewm.event.dto.event.EventShortDtoOut;
 import ru.practicum.ewm.event.service.guest.IEventGuestService;
 import ru.practicum.ewm.util.DateTimeUtil;
@@ -23,6 +21,13 @@ import java.util.Set;
 @RequiredArgsConstructor
 public class GuestEventController {
     private final IEventGuestService eventGuestService;
+
+    @GetMapping("/{id}")
+    public ResponseEntity<EventFullDtoOut> getById(
+            @PathVariable(name = "id", required = true) Long id) {
+        log.info("getById: id = {}", id);
+        return ResponseEntity.ok(eventGuestService.getById(id));
+    }
 
     @GetMapping
     public ResponseEntity<List<EventShortDtoOut>> getAllByParams(

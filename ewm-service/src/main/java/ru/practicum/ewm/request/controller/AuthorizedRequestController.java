@@ -25,12 +25,13 @@ public class AuthorizedRequestController {
         return new ResponseEntity<>(requestService.create(userId, eventId), HttpStatus.CREATED);
     }
 
-    @PatchMapping
+    @PatchMapping("/{requestId}/cancel")
     @ResponseStatus(HttpStatus.OK)
-    public void cancelRequest(@PathVariable(name = "userId", required = true) Long userId,
-                              @RequestParam(name = "requestId", required = true) Long requestId) {
+    public ResponseEntity<RequestDtoOut> cancelRequest(
+            @PathVariable(name = "userId", required = true) Long userId,
+            @PathVariable(name = "requestId", required = true) Long requestId) {
         log.info("cancelRequest: userId={}, requestId={}", userId, requestId);
-        requestService.cancel(userId, requestId);
+        return ResponseEntity.ok(requestService.cancel(userId, requestId));
     }
 
     @GetMapping

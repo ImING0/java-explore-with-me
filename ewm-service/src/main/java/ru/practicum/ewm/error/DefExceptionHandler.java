@@ -16,4 +16,11 @@ public class DefExceptionHandler {
         log.error(ex.getMessage());
         return ApiError.buildFromExAndHttpStatus(ex, HttpStatus.NOT_FOUND);
     }
+
+    @ExceptionHandler(value = {DataConflictException.class})
+    @ResponseStatus(HttpStatus.CONFLICT)
+    public ApiError handleDataConflictException(DataConflictException ex) {
+        log.error(ex.getMessage());
+        return ApiError.buildFromExAndHttpStatus(ex, HttpStatus.CONFLICT);
+    }
 }
