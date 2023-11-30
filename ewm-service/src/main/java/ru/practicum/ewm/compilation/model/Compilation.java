@@ -25,6 +25,9 @@ public class Compilation {
     private String title;
     @OneToMany(mappedBy = "compilation", fetch = FetchType.EAGER)
     private List<Event> events;
+    @Column(name = "pinned", nullable = false)
+    @Builder.Default
+    private Boolean pinned = false;
     @Column(name = "created_on", nullable = false)
     @CreationTimestamp
     private LocalDateTime createdOn;
