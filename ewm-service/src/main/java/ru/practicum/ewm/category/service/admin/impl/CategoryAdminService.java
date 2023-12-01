@@ -3,6 +3,7 @@ package ru.practicum.ewm.category.service.admin.impl;
 import lombok.RequiredArgsConstructor;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import ru.practicum.ewm.category.dto.CategoryDtoIn;
 import ru.practicum.ewm.category.dto.CategoryDtoOut;
 import ru.practicum.ewm.category.mapper.CategoryMapper;
@@ -18,6 +19,7 @@ public class CategoryAdminService implements ICategoryAdminService {
     private final CategoryRepository categoryRepository;
 
     @Override
+    @Transactional
     public CategoryDtoOut create(CategoryDtoIn categoryDtoIn) {
         Category categoryToSave = CategoryMapper.toCategory(categoryDtoIn);
         Category saved;
@@ -30,6 +32,7 @@ public class CategoryAdminService implements ICategoryAdminService {
     }
 
     @Override
+    @Transactional
     public CategoryDtoOut update(CategoryDtoIn categoryDtoIn,
                                  Long catId) {
         Category existingCategory = getCategoryOrThrow(catId);
@@ -46,6 +49,7 @@ public class CategoryAdminService implements ICategoryAdminService {
     }
 
     @Override
+    @Transactional
     public void delete(Long catId) {
         Category categoryToDelete = getCategoryOrThrow(catId);
         try {

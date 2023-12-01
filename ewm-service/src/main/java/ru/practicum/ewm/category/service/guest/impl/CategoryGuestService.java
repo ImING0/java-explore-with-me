@@ -3,6 +3,7 @@ package ru.practicum.ewm.category.service.guest.impl;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import ru.practicum.ewm.category.dto.CategoryDtoOut;
 import ru.practicum.ewm.category.mapper.CategoryMapper;
 import ru.practicum.ewm.category.model.Category;
@@ -19,6 +20,7 @@ public class CategoryGuestService implements ICategoryGuestService {
     private final CategoryRepository categoryRepository;
 
     @Override
+    @Transactional(readOnly = true)
     public List<CategoryDtoOut> getAll(Pageable pageable) {
         return categoryRepository.findAll(pageable)
                 .stream()
@@ -27,6 +29,7 @@ public class CategoryGuestService implements ICategoryGuestService {
     }
 
     @Override
+    @Transactional(readOnly = true)
     public CategoryDtoOut getById(Long catId) {
         return CategoryMapper.toDtoOut(getCategoryOrThrow(catId));
     }

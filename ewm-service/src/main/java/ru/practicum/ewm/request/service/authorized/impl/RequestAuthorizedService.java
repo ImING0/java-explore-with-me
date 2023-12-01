@@ -2,6 +2,7 @@ package ru.practicum.ewm.request.service.authorized.impl;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import ru.practicum.ewm.error.DataConflictException;
 import ru.practicum.ewm.error.ResourceNotFoundException;
 import ru.practicum.ewm.event.model.Event;
@@ -27,6 +28,7 @@ public class RequestAuthorizedService implements IRequestAuthorizedService {
     private final EventRepository eventRepository;
 
     @Override
+    @Transactional
     public RequestDtoOut create(Long userId,
                                 Long eventId) {
         User requester = getUserOrThrow(userId);
@@ -37,6 +39,7 @@ public class RequestAuthorizedService implements IRequestAuthorizedService {
     }
 
     @Override
+    @Transactional(readOnly = true)
     public List<RequestDtoOut> getAllForCurrentUser(Long userId) {
         return requestRepository.findAllByRequester(getUserOrThrow(userId))
                 .stream()
@@ -45,6 +48,7 @@ public class RequestAuthorizedService implements IRequestAuthorizedService {
     }
 
     @Override
+    @Transactional
     public RequestDtoOut cancel(Long requesterId,
                                 Long requestId) {
         User user = getUserOrThrow(requesterId);

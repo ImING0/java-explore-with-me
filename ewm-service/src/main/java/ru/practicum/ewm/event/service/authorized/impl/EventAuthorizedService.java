@@ -3,6 +3,7 @@ package ru.practicum.ewm.event.service.authorized.impl;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import ru.practicum.ewm.category.model.Category;
 import ru.practicum.ewm.category.repository.CategoryRepository;
 import ru.practicum.ewm.error.DataConflictException;
@@ -43,6 +44,7 @@ public class EventAuthorizedService implements IEventAuthorizedService {
     private final RequestRepository requestRepository;
 
     @Override
+    @Transactional
     public EventFullDtoOut create(NewEventDtoIn newEventDtoIn,
                                   Long userId) {
         User initiator = getUserOrThrow(userId);
@@ -53,6 +55,7 @@ public class EventAuthorizedService implements IEventAuthorizedService {
     }
 
     @Override
+    @Transactional(readOnly = true)
     public List<EventShortDtoOut> getAllForCurrentUser(Long userId,
                                                        Pageable pageable) {
         User initiator = getUserOrThrow(userId);
@@ -63,6 +66,7 @@ public class EventAuthorizedService implements IEventAuthorizedService {
     }
 
     @Override
+    @Transactional(readOnly = true)
     public EventFullDtoOut getByIdForCurrentUser(Long userId,
                                                  Long eventId) {
         User initiator = getUserOrThrow(userId);
@@ -73,6 +77,7 @@ public class EventAuthorizedService implements IEventAuthorizedService {
     }
 
     @Override
+    @Transactional
     public EventFullDtoOut updateForCurrentUser(EventUserUpdDtoIn updatedEvent,
                                                 Long userId,
                                                 Long eventId) {
@@ -81,6 +86,7 @@ public class EventAuthorizedService implements IEventAuthorizedService {
     }
 
     @Override
+    @Transactional(readOnly = true)
     public List<RequestDtoOut> getAllRequestByEventIdForCurrentUser(Long userId,
                                                                     Long eventId) {
         User initiator = getUserOrThrow(userId);
@@ -92,6 +98,7 @@ public class EventAuthorizedService implements IEventAuthorizedService {
     }
 
     @Override
+    @Transactional
     public EventRequestStatusUpdDtoOut updateRequestsStatusForCurrentUser(EventRequestStatusUpdDtoIn eventRequestStatusUpdDtoIn,
                                                                           Long userId,
                                                                           Long eventId) {

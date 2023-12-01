@@ -43,6 +43,7 @@ public class EventAdminService implements IEventAdminService {
     }
 
     @Override
+    @Transactional(readOnly = true)
     public List<EventFullDtoOut> getAllByParams(Set<Long> users,
                                                 Set<EventState> states,
                                                 Set<Long> categories,

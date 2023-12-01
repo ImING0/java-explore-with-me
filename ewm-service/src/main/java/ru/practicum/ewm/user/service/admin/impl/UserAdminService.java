@@ -5,6 +5,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import ru.practicum.ewm.error.DataConflictException;
 import ru.practicum.ewm.error.ResourceNotFoundException;
 import ru.practicum.ewm.user.dto.UserDtoIn;
@@ -25,6 +26,7 @@ public class UserAdminService implements IUserAdminService {
     private final UserRepository userRepository;
 
     @Override
+    @Transactional
     public UserDtoOut create(UserDtoIn userDtoIn) {
         User userToSave = UserMapper.toUser(userDtoIn);
         User saved;
@@ -37,12 +39,14 @@ public class UserAdminService implements IUserAdminService {
     }
 
     @Override
+    @Transactional
     public void delete(Long userId) {
         User userToDelete = getUserOrThrow(userId);
         userRepository.delete(userToDelete);
     }
 
     @Override
+    @Transactional(readOnly = true)
     public List<UserDtoOut> getAll(Set<Long> ids,
                                    Pageable pageable) {
 

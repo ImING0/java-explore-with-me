@@ -54,6 +54,7 @@ public class CompilationAdminService implements ICompilationAdminService {
     }
 
     @Override
+    @Transactional
     public void delete(Long compId) {
         Compilation compilation = getCompilationOrThrow(compId);
         compilationRepository.delete(compilation);

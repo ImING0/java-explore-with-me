@@ -5,6 +5,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import ru.practicum.ewm.compilation.dto.CompilationDtoOut;
 import ru.practicum.ewm.compilation.mapper.CompilationMapper;
 import ru.practicum.ewm.compilation.model.Compilation;
@@ -22,6 +23,7 @@ public class CompilationGuestService implements ICompilationGuestService {
     private final CompilationRepository compilationRepository;
 
     @Override
+    @Transactional(readOnly = true)
     public List<CompilationDtoOut> getAllByParams(Boolean pinned,
                                                   Integer from,
                                                   Integer size) {
@@ -38,6 +40,7 @@ public class CompilationGuestService implements ICompilationGuestService {
     }
 
     @Override
+    @Transactional(readOnly = true)
     public CompilationDtoOut getById(Long compId) {
         Compilation compilation = getCompOrThrow(compId);
         return CompilationMapper.toCompilationDtoOut(compilation);

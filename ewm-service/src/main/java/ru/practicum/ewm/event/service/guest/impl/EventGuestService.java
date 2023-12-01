@@ -30,6 +30,7 @@ public class EventGuestService implements IEventGuestService {
     private final EventRepository eventRepository;
 
     @Override
+    @Transactional(readOnly = true)
     public EventFullDtoOut getById(Long id) {
         QEvent event = QEvent.event;
         BooleanExpression predicate = event.isNotNull();
@@ -42,7 +43,7 @@ public class EventGuestService implements IEventGuestService {
     }
 
     @Override
-    @Transactional
+    @Transactional(readOnly = true)
     public List<EventShortDtoOut> getAllByParams(String text,
                                                  Set<Long> categories,
                                                  Boolean paid,
