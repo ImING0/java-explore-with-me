@@ -6,6 +6,7 @@ import ru.practicum.ewm.category.dto.CategoryDtoOut;
 /**
  * Сервис для работы с категориями
  */
+@SuppressWarnings("JavadocDeclaration")
 public interface ICategoryAdminService {
     /**
      * Создание категории
@@ -19,7 +20,7 @@ public interface ICategoryAdminService {
      * Обновление категории
      *
      * @param categoryDtoIn dto для обновления категории
-     * @param catId
+     * @param catId         идентификатор категории
      * @return dto обновленной категории
      */
     CategoryDtoOut update(CategoryDtoIn categoryDtoIn,

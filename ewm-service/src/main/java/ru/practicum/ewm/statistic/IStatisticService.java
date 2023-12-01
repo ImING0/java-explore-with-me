@@ -12,7 +12,8 @@ public interface IStatisticService {
     /**
      * Добавляет статистику в базу данных
      *
-     * @param statsRequestDto
+     * @param statsRequestDto Данные для добавления
+     * @return HttpStatus
      */
     HttpStatus addStat(StatsRequestDto statsRequestDto);
 

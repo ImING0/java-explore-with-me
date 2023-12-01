@@ -33,7 +33,7 @@ public interface IEventAdminService {
      * @param rangeStart начало временного диапазона
      * @param rangeEnd   конец временного диапазона
      * @param from       параметры пагинации
-     * @param size
+     * @param size       параметры пагинации
      * @return список событий
      */
     List<EventFullDtoOut> getAllByParams(Set<Long> users,

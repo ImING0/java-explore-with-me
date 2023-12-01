@@ -96,7 +96,7 @@ public class EventGuestService implements IEventGuestService {
         if (!(rangeStart == null || rangeEnd == null)) {
             predicate = predicate.and(event.eventDate.between(rangeStart, rangeEnd));
         } else {
-            // - 2 секунды потому что тесты не проходят ) там прям впритык создается...
+            // - 2 секунды потому что тесты не проходят там прям впритык создается...
             predicate = predicate.and(event.eventDate.after(LocalDateTime.now()
                     .minusSeconds(2)));
         }
