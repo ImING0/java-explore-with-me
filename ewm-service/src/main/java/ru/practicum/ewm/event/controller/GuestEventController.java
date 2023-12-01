@@ -6,10 +6,10 @@ import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import ru.practicum.ewm.dto.StatsRequestDto;
-import ru.practicum.ewm.event.Util.SortByForEvent;
 import ru.practicum.ewm.event.dto.event.EventFullDtoOut;
 import ru.practicum.ewm.event.dto.event.EventShortDtoOut;
 import ru.practicum.ewm.event.service.guest.IEventGuestService;
+import ru.practicum.ewm.event.util.SortByForEvent;
 import ru.practicum.ewm.statistic.constant.StatsConstants;
 import ru.practicum.ewm.util.DateTimeUtil;
 

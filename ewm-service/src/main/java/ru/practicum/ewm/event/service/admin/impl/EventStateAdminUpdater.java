@@ -6,8 +6,17 @@ import ru.practicum.ewm.event.dto.event.EventAdminUpdDtoIn;
 import ru.practicum.ewm.event.model.Event;
 import ru.practicum.ewm.event.model.EventState;
 
+/**
+ * Обновление состояния мероприятия администратором
+ */
 @UtilityClass
 class EventStateAdminUpdater {
+    /**
+     * Обновление состояния мероприятия администратором
+     *
+     * @param existingEvent существующее мероприятие
+     * @param updatedEvent  обновленное мероприятие
+     */
     public void updateEventStateInternal(Event existingEvent,
                                          EventAdminUpdDtoIn updatedEvent) {
         if (updatedEvent.getStateAction() != null) {

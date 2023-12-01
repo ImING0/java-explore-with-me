@@ -10,6 +10,9 @@ import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
+/**
+ * Класс для описания ошибки
+ */
 @Builder
 @Data
 public class ApiError {

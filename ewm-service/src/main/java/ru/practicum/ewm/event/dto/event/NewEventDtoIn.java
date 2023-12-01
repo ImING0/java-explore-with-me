@@ -18,7 +18,6 @@ import java.time.LocalDateTime;
 @AllArgsConstructor
 @NoArgsConstructor
 public class NewEventDtoIn {
-    // TODO добавить аннотацию проверки времени события
     @NotBlank(message = "Title must not be blank")
     @Size(min = 3, max = 120, message = "Title must be between 3 and 120 characters")
     private String title;

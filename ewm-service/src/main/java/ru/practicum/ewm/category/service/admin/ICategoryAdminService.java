@@ -4,9 +4,8 @@ import ru.practicum.ewm.category.dto.CategoryDtoIn;
 import ru.practicum.ewm.category.dto.CategoryDtoOut;
 
 /**
- * Сервис для работы с категориями
+ * Сервис для работы с категориями от имени админа
  */
-@SuppressWarnings("JavadocDeclaration")
 public interface ICategoryAdminService {
     /**
      * Создание категории

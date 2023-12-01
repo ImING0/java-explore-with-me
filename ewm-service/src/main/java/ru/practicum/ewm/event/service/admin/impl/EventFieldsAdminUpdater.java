@@ -5,8 +5,18 @@ import ru.practicum.ewm.category.model.Category;
 import ru.practicum.ewm.event.dto.event.EventAdminUpdDtoIn;
 import ru.practicum.ewm.event.model.Event;
 
+/**
+ * Класс для обновления полей мероприятия администратором
+ */
 @UtilityClass
 class EventFieldsAdminUpdater {
+    /**
+     * Обновляет поля мероприятия
+     *
+     * @param existingEvent существующее мероприятие
+     * @param updatedEvent  новые данные мероприятия
+     * @param newCategory   новая категория
+     */
     public void updateEventFieldsInternal(Event existingEvent,
                                           EventAdminUpdDtoIn updatedEvent,
                                           Category newCategory) {

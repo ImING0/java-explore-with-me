@@ -10,7 +10,6 @@ import org.springframework.transaction.annotation.Transactional;
 import ru.practicum.ewm.dto.StatsRequestDto;
 import ru.practicum.ewm.error.BadRequestException;
 import ru.practicum.ewm.error.ResourceNotFoundException;
-import ru.practicum.ewm.event.Util.SortByForEvent;
 import ru.practicum.ewm.event.dto.event.EventFullDtoOut;
 import ru.practicum.ewm.event.dto.event.EventShortDtoOut;
 import ru.practicum.ewm.event.mapper.EventMapper;
@@ -20,6 +19,7 @@ import ru.practicum.ewm.event.model.QEvent;
 import ru.practicum.ewm.event.repository.EventRepository;
 import ru.practicum.ewm.event.service.guest.IEventGuestService;
 import ru.practicum.ewm.event.service.internal.IEventStatisticService;
+import ru.practicum.ewm.event.util.SortByForEvent;
 
 import java.time.LocalDateTime;
 import java.util.List;

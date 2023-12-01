@@ -5,6 +5,9 @@ import ru.practicum.ewm.category.dto.CategoryDtoOut;
 
 import java.util.List;
 
+/**
+ * Сервис для работы с категориями для всех пользователей
+ */
 public interface ICategoryGuestService {
     /**
      * Получение всех категорий

@@ -10,6 +10,10 @@ import ru.practicum.ewm.event.model.EventState;
 import java.time.Duration;
 import java.time.LocalDateTime;
 
+/**
+ * Класс для обновления даты и времени события в зависимости
+ * от состояния и даты публикации авторизованным пользователем
+ */
 @UtilityClass
 class EventDateAuthorizedUpdater {
     /**
@@ -27,6 +31,12 @@ class EventDateAuthorizedUpdater {
         return duration.toHours() >= hours;
     }
 
+    /**
+     * Обновляет дату и время события в зависимости от состояния и даты публикации
+     *
+     * @param existingEvent существующее событие
+     * @param updatedEvent  обновленное событие
+     */
     public void updateEventDateTimeInternal(Event existingEvent,
                                             EventUserUpdDtoIn updatedEvent) {
         StateUserAction newState = updatedEvent.getStateAction();

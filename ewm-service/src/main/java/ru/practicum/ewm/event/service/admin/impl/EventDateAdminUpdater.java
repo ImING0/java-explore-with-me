@@ -10,6 +10,9 @@ import ru.practicum.ewm.event.model.EventState;
 import java.time.Duration;
 import java.time.LocalDateTime;
 
+/**
+ * Класс для обновления даты и времени события администратором
+ */
 @UtilityClass
 class EventDateAdminUpdater {
 
@@ -28,6 +31,12 @@ class EventDateAdminUpdater {
         return duration.toHours() >= hours;
     }
 
+    /**
+     * Обновляет дату и время события в зависимости от текущего состояния и нового состояния
+     *
+     * @param existingEvent существующее событие
+     * @param updatedEvent  событие с новыми данными
+     */
     public void updateEventDateTimeInternal(Event existingEvent,
                                             EventAdminUpdDtoIn updatedEvent) {
         StateAdminAction newState = updatedEvent.getStateAction();

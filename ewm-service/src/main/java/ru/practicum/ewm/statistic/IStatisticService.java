@@ -1,6 +1,5 @@
 package ru.practicum.ewm.statistic;
 
-import org.springframework.http.HttpStatus;
 import ru.practicum.ewm.dto.StatsRequestDto;
 import ru.practicum.ewm.dto.StatsResponseDto;
 
@@ -8,14 +7,18 @@ import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Set;
 
+/**
+ * Сервис для работы со статистикой. Использует StatsServiceClient для взаимодействия с сервисом статистики
+ * На основе этого сервиса, для каждого пакета может быть реализована своя
+ * логика рабаты со статистикой
+ */
 public interface IStatisticService {
     /**
      * Добавляет статистику в базу данных
      *
      * @param statsRequestDto Данные для добавления
-     * @return HttpStatus
      */
-    HttpStatus addStat(StatsRequestDto statsRequestDto);
+    void addStat(StatsRequestDto statsRequestDto);
 
     /**
      * Возвращает статистику по запросам

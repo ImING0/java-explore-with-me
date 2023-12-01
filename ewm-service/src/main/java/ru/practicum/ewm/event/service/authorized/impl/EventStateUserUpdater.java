@@ -5,8 +5,17 @@ import ru.practicum.ewm.event.dto.event.EventUserUpdDtoIn;
 import ru.practicum.ewm.event.model.Event;
 import ru.practicum.ewm.event.model.EventState;
 
+/**
+ * Обновление состояния события для авторизованного пользователя.
+ */
 @UtilityClass
 class EventStateUserUpdater {
+    /**
+     * Обновление состояния события для авторизованного пользователя.
+     *
+     * @param existingEvent Существующее событие
+     * @param updatedEvent  Обновленное событие
+     */
     public void updateEventStateInternal(Event existingEvent,
                                          EventUserUpdDtoIn updatedEvent) {
         /*Если есть новое состояние - то обновляем.*/

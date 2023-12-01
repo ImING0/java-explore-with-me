@@ -1,4 +1,4 @@
-package ru.practicum.ewm.event.Util;
+package ru.practicum.ewm.event.util;
 
 public enum SortByForEvent {
     EVENT_DATE,
