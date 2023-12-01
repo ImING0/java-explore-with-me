@@ -1,5 +1,6 @@
 package ru.practicum.ewm.event.service.guest;
 
+import ru.practicum.ewm.dto.StatsRequestDto;
 import ru.practicum.ewm.event.Util.SortByForEvent;
 import ru.practicum.ewm.event.dto.event.EventFullDtoOut;
 import ru.practicum.ewm.event.dto.event.EventShortDtoOut;
@@ -9,7 +10,8 @@ import java.util.List;
 import java.util.Set;
 
 public interface IEventGuestService {
-    EventFullDtoOut getById(Long id);
+    EventFullDtoOut getById(Long id,
+                            StatsRequestDto statsRequestDto);
 
     List<EventShortDtoOut> getAllByParams(String text,
                                           Set<Long> categories,
@@ -19,5 +21,6 @@ public interface IEventGuestService {
                                           Boolean onlyAvailable,
                                           SortByForEvent sort,
                                           Integer from,
-                                          Integer size);
+                                          Integer size,
+                                          StatsRequestDto statsRequestDto);
 }

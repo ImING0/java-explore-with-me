@@ -7,6 +7,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import ru.practicum.ewm.dto.StatsRequestDto;
 import ru.practicum.ewm.error.BadRequestException;
 import ru.practicum.ewm.error.ResourceNotFoundException;
 import ru.practicum.ewm.event.Util.SortByForEvent;
@@ -18,6 +19,7 @@ import ru.practicum.ewm.event.model.EventState;
 import ru.practicum.ewm.event.model.QEvent;
 import ru.practicum.ewm.event.repository.EventRepository;
 import ru.practicum.ewm.event.service.guest.IEventGuestService;
+import ru.practicum.ewm.event.service.internal.IEventStatisticService;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -28,10 +30,16 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 public class EventGuestService implements IEventGuestService {
     private final EventRepository eventRepository;
+    private final IEventStatisticService eventStatisticService;
 
     @Override
-    @Transactional(readOnly = true)
-    public EventFullDtoOut getById(Long id) {
+    @Transactional
+    public EventFullDtoOut getById(Long id,
+                                   StatsRequestDto statsRequestDto) {
+
+        /*Регистрируем, что был запрос, даже если нет Евента*/
+        eventStatisticService.addHit(statsRequestDto);
+
         QEvent event = QEvent.event;
         BooleanExpression predicate = event.isNotNull();
         predicate = predicate.and(event.id.eq(id))
@@ -39,6 +47,14 @@ public class EventGuestService implements IEventGuestService {
         Event existingEvent = eventRepository.findOne(predicate)
                 .orElseThrow(() -> new ResourceNotFoundException(
                         String.format("Event with id %d not found", id)));
+
+        /*Получаем и обновляем просмотры в событии.
+         Возвращаем текущее состояние просмотров по
+         евенту с учетом текущего запроса.*/
+        Long currentEventViews = eventStatisticService.getViewsByEvent(existingEvent);
+        /*Сохраним просмотры в сущность события*/
+        existingEvent.setViews(currentEventViews);
+        existingEvent = eventRepository.saveAndFlush(existingEvent);
         return EventMapper.toEventFullDtoOut(existingEvent);
     }
 
@@ -52,7 +68,11 @@ public class EventGuestService implements IEventGuestService {
                                                  Boolean onlyAvailable,
                                                  SortByForEvent sort,
                                                  Integer from,
-                                                 Integer size) {
+                                                 Integer size,
+                                                 StatsRequestDto statsRequestDto) {
+        /*Регистрируем, что был запрос, даже если нет Евента*/
+        eventStatisticService.addHit(statsRequestDto);
+
         if (rangeStart != null && rangeEnd != null) {
             if (rangeStart.isAfter(rangeEnd)) {
                 throw new BadRequestException(
@@ -67,7 +87,7 @@ public class EventGuestService implements IEventGuestService {
             predicate = predicate.and(event.annotation.containsIgnoreCase(text)
                     .or(event.description.containsIgnoreCase(text)));
         }
-        if (!categories.isEmpty()) {
+        if (categories != null && !categories.isEmpty()) {
             predicate = predicate.and(event.category.id.in(categories));
         }
         if (!(paid == null)) {

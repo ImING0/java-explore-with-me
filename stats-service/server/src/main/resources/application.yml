@@ -57,7 +57,6 @@ logging:
     org.springframework.orm.jpa.JpaTransactionManager: INFO # был дебаг
 server:
   port: 9090
-
 ---
 # для тестов в контейнере
 

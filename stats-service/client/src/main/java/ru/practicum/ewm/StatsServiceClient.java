@@ -1,5 +1,6 @@
 package ru.practicum.ewm;
 
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
@@ -17,6 +18,7 @@ import java.util.Objects;
 import java.util.Set;
 
 @Service
+@Slf4j
 public class StatsServiceClient {
 
     private final WebClient webClient;
@@ -35,6 +37,7 @@ public class StatsServiceClient {
      * @return HttpStatus
      */
     public HttpStatus addHit(StatsRequestDto statsRequestDto) {
+        log.info("addHit request: {}", statsRequestDto);
         return Objects.requireNonNull(webClient.post()
                         .uri("/hit")
                         .bodyValue(statsRequestDto)
@@ -57,12 +60,12 @@ public class StatsServiceClient {
                                                            LocalDateTime end,
                                                            Set<String> uris,
                                                            boolean unique) {
-        String encodedStart = DateTimeUtil.encodeDateTimeToString(start);
-        String encodedEnd = DateTimeUtil.encodeDateTimeToString(end);
+        log.info("getStats request: start={}, end={}, uris={}, unique={}", start, end, uris,
+                unique);
         return webClient.get()
                 .uri(uriBuilder -> uriBuilder.path("/stats")
-                        .queryParam("start", encodedStart)
-                        .queryParam("end", encodedEnd)
+                        .queryParam("start", DateTimeUtil.getLocalDateTimeAsString(start))
+                        .queryParam("end", DateTimeUtil.getLocalDateTimeAsString(end))
                         .queryParam("uris", uris)
                         .queryParam("unique", unique)
                         .build())

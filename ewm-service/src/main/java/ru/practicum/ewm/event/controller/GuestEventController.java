@@ -5,12 +5,15 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import ru.practicum.ewm.dto.StatsRequestDto;
 import ru.practicum.ewm.event.Util.SortByForEvent;
 import ru.practicum.ewm.event.dto.event.EventFullDtoOut;
 import ru.practicum.ewm.event.dto.event.EventShortDtoOut;
 import ru.practicum.ewm.event.service.guest.IEventGuestService;
+import ru.practicum.ewm.statistic.constant.StatsConstants;
 import ru.practicum.ewm.util.DateTimeUtil;
 
+import javax.servlet.http.HttpServletRequest;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Set;
@@ -24,9 +27,16 @@ public class GuestEventController {
 
     @GetMapping("/{id}")
     public ResponseEntity<EventFullDtoOut> getById(
-            @PathVariable(name = "id", required = true) Long id) {
-        log.info("getById: id = {}", id);
-        return ResponseEntity.ok(eventGuestService.getById(id));
+            @PathVariable(name = "id", required = true) Long id,
+            HttpServletRequest httpServletRequest) {
+        log.info("getById: id = {}, userIp = {}", id, httpServletRequest.getRemoteAddr());
+        StatsRequestDto statsRequestDto = StatsRequestDto.builder()
+                .app(StatsConstants.EWM_MAIN_SERVICE_APP)
+                .ip(httpServletRequest.getRemoteAddr())
+                .uri(StatsConstants.EVENT_BASE_GUEST_PATH + "/" + id)
+                .timestamp(LocalDateTime.now())
+                .build();
+        return ResponseEntity.ok(eventGuestService.getById(id, statsRequestDto));
     }
 
     @GetMapping
@@ -41,12 +51,20 @@ public class GuestEventController {
             @RequestParam(name = "onlyAvailable", defaultValue = "false") Boolean onlyAvailable,
             @RequestParam(name = "sort", defaultValue = "EVENT_DATE") SortByForEvent sort,
             @RequestParam(name = "from", defaultValue = "0") Integer from,
-            @RequestParam(name = "size", defaultValue = "10") Integer size) {
+            @RequestParam(name = "size", defaultValue = "10") Integer size,
+            HttpServletRequest httpServletRequest) {
         log.info("getAllByParams: text = {}, categories = {}, paid = {}, rangeStart = {}, "
-                        + "rangeEnd = {}, onlyAvailable = {}, sort = {}, from = {}, size = {}", text,
-                categories, paid, rangeStart, rangeEnd, onlyAvailable, sort, from, size);
+                        + "rangeEnd = {}, onlyAvailable = {}, sort = {}, from = {}, size = {}, "
+                        + "userIp = {}", text, categories, paid, rangeStart, rangeEnd, onlyAvailable, sort,
+                from, size, httpServletRequest.getRemoteAddr());
+        StatsRequestDto statsRequestDto = StatsRequestDto.builder()
+                .app(StatsConstants.EWM_MAIN_SERVICE_APP)
+                .ip(httpServletRequest.getRemoteAddr())
+                .uri(StatsConstants.EVENT_BASE_GUEST_PATH)
+                .timestamp(LocalDateTime.now())
+                .build();
         return ResponseEntity.ok(
                 eventGuestService.getAllByParams(text, categories, paid, rangeStart, rangeEnd,
-                        onlyAvailable, sort, from, size));
+                        onlyAvailable, sort, from, size, statsRequestDto));
     }
 }

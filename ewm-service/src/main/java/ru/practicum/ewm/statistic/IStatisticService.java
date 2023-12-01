@@ -1,6 +1,7 @@
 package ru.practicum.ewm.statistic;
 
 import org.springframework.http.HttpStatus;
+import ru.practicum.ewm.dto.StatsRequestDto;
 import ru.practicum.ewm.dto.StatsResponseDto;
 
 import java.time.LocalDateTime;
@@ -11,15 +12,9 @@ public interface IStatisticService {
     /**
      * Добавляет статистику в базу данных
      *
-     * @param app       application name
-     * @param uri       request uri
-     * @param ip        client ip
-     * @param timestamp request timestamp
+     * @param statsRequestDto
      */
-    HttpStatus addStat(String app,
-                       String uri,
-                       String ip,
-                       LocalDateTime timestamp);
+    HttpStatus addStat(StatsRequestDto statsRequestDto);
 
     /**
      * Возвращает статистику по запросам

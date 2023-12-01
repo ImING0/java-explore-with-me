@@ -18,16 +18,7 @@ public class StatisticService implements IStatisticService {
     private final StatsServiceClient statsServiceClient;
 
     @Override
-    public HttpStatus addStat(String app,
-                              String uri,
-                              String ip,
-                              LocalDateTime timestamp) {
-        StatsRequestDto statsRequestDto = StatsRequestDto.builder()
-                .app(app)
-                .uri(uri)
-                .ip(ip)
-                .timestamp(timestamp)
-                .build();
+    public HttpStatus addStat(StatsRequestDto statsRequestDto) {
         return statsServiceClient.addHit(statsRequestDto);
     }
 

@@ -54,6 +54,7 @@ public class CategoryAdminService implements ICategoryAdminService {
         Category categoryToDelete = getCategoryOrThrow(catId);
         try {
             categoryRepository.delete(categoryToDelete);
+            categoryRepository.flush();
         } catch (DataIntegrityViolationException ex) {
             throw new DataConflictException(ex.getMessage(), ex.getCause());
         }
