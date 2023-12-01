@@ -36,9 +36,14 @@ spring:
         dialect: org.hibernate.dialect.PostgreSQLDialect # был PostgreSQL10Dialect
         format_sql: true
         show_sql: true
-  sql:
-    init:
-      mode: always
+  flyway:
+    enabled: true
+    baseline-on-migrate: true
+  #sql:
+    #init:
+      #mode: always
+      #schema-locations: classpath:V1__Initial_schema.sql
+      #data-locations: classpath:V2__Create_trigger.sql
   config:
     activate:
       on-profile: default

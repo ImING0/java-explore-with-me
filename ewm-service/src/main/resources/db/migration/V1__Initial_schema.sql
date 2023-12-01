@@ -171,3 +171,26 @@ comment on column requests.status is 'Статус заявки';
 comment on constraint requests_requester_id_users_id_fk on requests is 'Ограничение внешнего ключа по таблице пользователей';
 
 comment on constraint requests_event_id_events_id_fk on requests is 'Ограничение по внешнему ключу id таблицы event';
+
+CREATE OR REPLACE FUNCTION update_confirmed_requests()
+    RETURNS TRIGGER
+    LANGUAGE plpgsql AS $$
+BEGIN
+    UPDATE events
+    SET confirmed_requests = (SELECT COUNT(*)
+                              FROM requests
+                              WHERE event_id = NEW.event_id
+                                AND status = 'CONFIRMED')
+    WHERE id = NEW.event_id;
+    RETURN NEW;
+END;
+$$;
+
+DROP TRIGGER IF EXISTS update_confirmed_requests_after_insert ON requests;
+
+-- Создание нового триггера
+CREATE TRIGGER update_confirmed_requests_after_insert
+    AFTER INSERT OR UPDATE OR DELETE
+    ON requests
+    FOR EACH ROW
+EXECUTE FUNCTION update_confirmed_requests();

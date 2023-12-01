@@ -44,8 +44,8 @@ public class EventMapper {
                         .lon(newEventDtoIn.getLocation()
                                 .getLon())
                         .build())
-                .paid(newEventDtoIn.getPaid())
-                .requestModeration(newEventDtoIn.getRequestModeration())
+                .paid(newEventDtoIn.isPaid())
+                .requestModeration(newEventDtoIn.isRequestModeration())
                 .views(0L) //при создании события количество просмотров равно 0
                 .build();
     }

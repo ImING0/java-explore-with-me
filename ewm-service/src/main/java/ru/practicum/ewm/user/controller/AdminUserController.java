@@ -13,8 +13,8 @@ import ru.practicum.ewm.user.dto.UserDtoOut;
 import ru.practicum.ewm.user.service.admin.IUserAdminService;
 
 import javax.validation.Valid;
-import javax.validation.constraints.PositiveOrZero;
 import java.util.List;
+import java.util.Set;
 
 @RestController
 @RequestMapping("/admin/users")
@@ -31,11 +31,11 @@ public class AdminUserController {
 
     @GetMapping
     public ResponseEntity<List<UserDtoOut>> getAllUsers(
-            @RequestParam(name = "ids", required = false) List<Long> ids,
-            @RequestParam(name = "from", defaultValue = "0") @PositiveOrZero Integer from,
-            @RequestParam(name = "size", defaultValue = "10") @PositiveOrZero Integer size) {
+            @RequestParam(name = "ids", required = false) Set<Long> ids,
+            @RequestParam(name = "from", defaultValue = "0") Integer from,
+            @RequestParam(name = "size", defaultValue = "10") Integer size) {
         log.info("Getting users with ids {} from {} to {}", ids, from, from + size);
-        Pageable pageable = PageRequest.of(from / size, size, Sort.by(Sort.Direction.DESC, "id"));
+        Pageable pageable = PageRequest.of(from / size, size, Sort.by(Sort.Direction.ASC, "id"));
         return new ResponseEntity<>(userService.getAll(ids, pageable), HttpStatus.OK);
     }
 

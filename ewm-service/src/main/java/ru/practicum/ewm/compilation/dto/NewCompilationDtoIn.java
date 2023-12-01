@@ -5,7 +5,7 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import javax.validation.constraints.NotNull;
+import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Size;
 import java.util.Set;
 
@@ -14,10 +14,9 @@ import java.util.Set;
 @NoArgsConstructor
 @AllArgsConstructor
 public class NewCompilationDtoIn {
-    @NotNull
     private Set<Long> events;
-    @Builder.Default
-    private Boolean pinned = false;
+    private boolean pinned = false;
     @Size(min = 1, max = 50, message = "Title must be between 1 and 50 characters")
+    @NotBlank(message = "Title must not be blank")
     private String title;
 }

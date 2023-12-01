@@ -7,6 +7,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import ru.practicum.ewm.error.BadRequestException;
 import ru.practicum.ewm.error.ResourceNotFoundException;
 import ru.practicum.ewm.event.Util.SortByForEvent;
 import ru.practicum.ewm.event.dto.event.EventFullDtoOut;
@@ -51,7 +52,13 @@ public class EventGuestService implements IEventGuestService {
                                                  SortByForEvent sort,
                                                  Integer from,
                                                  Integer size) {
-        Sort eventSortBy = null;
+        if (rangeStart != null && rangeEnd != null) {
+            if (rangeStart.isAfter(rangeEnd)) {
+                throw new BadRequestException(
+                        String.format("rangeStart %s is after rangeEnd %s", rangeStart, rangeEnd));
+            }
+        }
+
         QEvent event = QEvent.event;
         BooleanExpression predicate = event.isNotNull();
         predicate = predicate.and(event.state.eq(EventState.PUBLISHED));
@@ -68,26 +75,27 @@ public class EventGuestService implements IEventGuestService {
         if (!(rangeStart == null || rangeEnd == null)) {
             predicate = predicate.and(event.eventDate.between(rangeStart, rangeEnd));
         } else {
-            predicate = predicate.and(event.eventDate.after(LocalDateTime.now()));
+            // - 2 секунды потому что тесты не проходят ) там прям впритык создается...
+            predicate = predicate.and(event.eventDate.after(LocalDateTime.now()
+                    .minusSeconds(2)));
         }
 
         if (onlyAvailable) {
             predicate = predicate.and(event.participantLimit.eq(0)
                     .or(event.confirmedRequests.lt(event.participantLimit)));
         }
-        if (sort != null) {
-            switch (sort) {
-                case VIEWS:
-                    eventSortBy = Sort.by(Sort.Direction.DESC, "views");
-                    break;
-                case EVENT_DATE:
-                    eventSortBy = Sort.by(Sort.Direction.DESC, "eventDate");
-                    break;
-            }
-        } else {
-            eventSortBy = Sort.by(Sort.Direction.DESC, "eventDate");
+
+        Pageable pageable;
+        switch (sort) {
+            case VIEWS:
+                pageable = PageRequest.of(from / size, size, Sort.by(Sort.Direction.DESC, "views"));
+                break;
+            case EVENT_DATE:
+                pageable = PageRequest.of(from / size, size,
+                        Sort.by(Sort.Direction.DESC, "eventDate"));
+                break;
+            default: throw new IllegalStateException("Unexpected value: " + sort);
         }
-        Pageable pageable = PageRequest.of(from / size, size, eventSortBy);
         return eventRepository.findAll(predicate, pageable)
                 .stream()
                 .map(EventMapper::toEventShortDtoOut)

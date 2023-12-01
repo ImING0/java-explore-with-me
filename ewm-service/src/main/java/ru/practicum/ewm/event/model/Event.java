@@ -42,11 +42,9 @@ public class Event {
     @JoinColumn(name = "category_id", nullable = false)
     private Category category;
     @Column(name = "participant_limit", nullable = false)
-    @Builder.Default
-    private Integer participantLimit = 0; //Лимит участников (0 - нет лимита)
+    private Integer participantLimit; //Лимит участников (0 - нет лимита)
     @Column(name = "confirmed_requests", nullable = false)
-    @Builder.Default
-    private Long confirmedRequests = 0L; // Количество одобренных заявок на участие в данном событии
+    private Long confirmedRequests; // Количество одобренных заявок на участие в данном событии
     @Column(name = "state", nullable = false)
     @Enumerated(EnumType.STRING)
     @Type(type = "pgsql_enum")
@@ -63,19 +61,15 @@ public class Event {
     @Embedded
     private Location location;
     /*Булевы значения*/
-    @Column(name = "paid", nullable = false, columnDefinition = "boolean default false")
-    @Builder.Default
-    private Boolean paid = false; // Нужно ли платить за участие
-    @Column(name = "request_moderation", nullable = false,
-            columnDefinition = "boolean default true")
-    @Builder.Default
-    private Boolean requestModeration = true; // Нужна ли модерация заявок
+    @Column(name = "paid", nullable = false)
+    private Boolean paid; // Нужно ли платить за участие
+    @Column(name = "request_moderation", nullable = false)
+    private Boolean requestModeration; // Нужна ли модерация заявок
     /*Компиляция*/
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "compilation_id")
     private Compilation compilation;
     /*Просмотры*/
     @Column(name = "views", nullable = false)
-    @Builder.Default
-    private Long views = 0L;
+    private Long views;
 }

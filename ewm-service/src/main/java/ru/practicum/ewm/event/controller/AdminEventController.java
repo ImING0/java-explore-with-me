@@ -2,9 +2,6 @@ package ru.practicum.ewm.event.controller;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -15,8 +12,6 @@ import ru.practicum.ewm.event.service.admin.IEventAdminService;
 import ru.practicum.ewm.util.DateTimeUtil;
 
 import javax.validation.Valid;
-import javax.validation.constraints.NotEmpty;
-import javax.validation.constraints.PositiveOrZero;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Set;
@@ -38,22 +33,20 @@ public class AdminEventController {
 
     @GetMapping
     public ResponseEntity<List<EventFullDtoOut>> getAllByParams(
-            @RequestParam(name = "users", required = true) @NotEmpty Set<Long> users,
-            @RequestParam(name = "states", required = true) @NotEmpty Set<EventState> states,
-            @RequestParam(name = "categories", required = true) @NotEmpty Set<Long> categories,
-            @RequestParam(name = "rangeStart", required = true)
+            @RequestParam(name = "users", required = false) Set<Long> users,
+            @RequestParam(name = "states", required = false) Set<EventState> states,
+            @RequestParam(name = "categories", required = false) Set<Long> categories,
+            @RequestParam(name = "rangeStart", required = false)
             @DateTimeFormat(pattern = DateTimeUtil.DATE_TIME_FORMAT) LocalDateTime rangeStart,
-            @RequestParam(name = "rangeEnd", required = true)
+            @RequestParam(name = "rangeEnd", required = false)
             @DateTimeFormat(pattern = DateTimeUtil.DATE_TIME_FORMAT) LocalDateTime rangeEnd,
-            @RequestParam(name = "from", defaultValue = "0") @PositiveOrZero Integer from,
-            @RequestParam(name = "size", defaultValue = "10") @PositiveOrZero Integer size) {
+            @RequestParam(name = "from", defaultValue = "0") Integer from,
+            @RequestParam(name = "size", defaultValue = "10") Integer size) {
         log.info(
                 "getAllByParams: users={}, states={}, categories={}, rangeStart={}, rangeEnd={}, from={}, size={}",
                 users, states, categories, rangeStart, rangeEnd, from, size);
-        Pageable pageable = PageRequest.of(from / size, size,
-                Sort.by(Sort.Direction.DESC, "eventDate"));
         return ResponseEntity.ok(
                 eventAdminService.getAllByParams(users, states, categories, rangeStart, rangeEnd,
-                        pageable));
+                        from, size));
     }
 }

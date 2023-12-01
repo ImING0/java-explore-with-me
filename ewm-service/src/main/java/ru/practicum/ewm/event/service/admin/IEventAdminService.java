@@ -1,6 +1,5 @@
 package ru.practicum.ewm.event.service.admin;
 
-import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import ru.practicum.ewm.event.dto.event.EventAdminUpdDtoIn;
 import ru.practicum.ewm.event.dto.event.EventFullDtoOut;
@@ -33,7 +32,8 @@ public interface IEventAdminService {
      * @param categories список id категорий
      * @param rangeStart начало временного диапазона
      * @param rangeEnd   конец временного диапазона
-     * @param pageable   параметры пагинации
+     * @param from       параметры пагинации
+     * @param size
      * @return список событий
      */
     List<EventFullDtoOut> getAllByParams(Set<Long> users,
@@ -41,5 +41,6 @@ public interface IEventAdminService {
                                          Set<Long> categories,
                                          LocalDateTime rangeStart,
                                          LocalDateTime rangeEnd,
-                                         Pageable pageable);
+                                         Integer from,
+                                         Integer size);
 }

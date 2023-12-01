@@ -12,6 +12,7 @@ import ru.practicum.ewm.compilation.mapper.CompilationMapper;
 import ru.practicum.ewm.compilation.model.Compilation;
 import ru.practicum.ewm.compilation.repository.CompilationRepository;
 import ru.practicum.ewm.compilation.service.admin.ICompilationAdminService;
+import ru.practicum.ewm.error.DataConflictException;
 import ru.practicum.ewm.error.ResourceNotFoundException;
 import ru.practicum.ewm.event.model.Event;
 import ru.practicum.ewm.event.model.QEvent;
@@ -36,6 +37,10 @@ public class CompilationAdminService implements ICompilationAdminService {
                 CompilationMapper.toCompilation(newCompilationDtoIn));
         log.info("Created compilation with id {}", compilation.getId());
         Set<Long> eventIds = newCompilationDtoIn.getEvents();
+        /*Если нет евентов значит пустая подборка. Уже создали, посто вернем ее.*/
+        if (eventIds == null || eventIds.isEmpty()) {
+            return CompilationMapper.toCompilationDtoOut(compilation);
+        }
         /*Проверяем, что все переданные id событий существуют*/
         List<Event> existingEvents = getEventsFromIdsOrThrow404IfSomeEventNotFound(eventIds);
 
@@ -59,6 +64,21 @@ public class CompilationAdminService implements ICompilationAdminService {
     public CompilationDtoOut update(UpdateCompilationDtoIn updateCompilationDtoIn,
                                     Long compId) {
         Compilation existingCompilation = getCompilationOrThrow(compId);
+        if (updateCompilationDtoIn.getTitle() != null && !updateCompilationDtoIn.getTitle()
+                .isBlank()) {
+            if (existingCompilation.getTitle()
+                    .equals(updateCompilationDtoIn.getTitle())) {
+                throw new DataConflictException(
+                        String.format("Compilation with id %s already has title %s", compId,
+                                updateCompilationDtoIn.getTitle()));
+            } else {
+                existingCompilation.setTitle(updateCompilationDtoIn.getTitle());
+            }
+        }
+        if (updateCompilationDtoIn.getPinned() != null) {
+            existingCompilation.setPinned(updateCompilationDtoIn.getPinned());
+        }
+        compilationRepository.saveAndFlush(existingCompilation);
         if (updateCompilationDtoIn.getEvents() != null) {
             if (updateCompilationDtoIn.getEvents()
                     .isEmpty()) {

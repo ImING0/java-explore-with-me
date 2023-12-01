@@ -23,4 +23,11 @@ public class DefExceptionHandler {
         log.error(ex.getMessage());
         return ApiError.buildFromExAndHttpStatus(ex, HttpStatus.CONFLICT);
     }
+
+    @ExceptionHandler(value = {BadRequestException.class})
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    public ApiError handleBadRequestException(BadRequestException ex) {
+        log.error(ex.getMessage());
+        return ApiError.buildFromExAndHttpStatus(ex, HttpStatus.BAD_REQUEST);
+    }
 }

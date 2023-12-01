@@ -1,18 +1,22 @@
 package ru.practicum.ewm.event.service.admin.impl;
 
+import com.querydsl.core.types.dsl.BooleanExpression;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import ru.practicum.ewm.category.model.Category;
 import ru.practicum.ewm.category.repository.CategoryRepository;
+import ru.practicum.ewm.error.BadRequestException;
 import ru.practicum.ewm.error.ResourceNotFoundException;
 import ru.practicum.ewm.event.dto.event.EventAdminUpdDtoIn;
 import ru.practicum.ewm.event.dto.event.EventFullDtoOut;
 import ru.practicum.ewm.event.mapper.EventMapper;
 import ru.practicum.ewm.event.model.Event;
 import ru.practicum.ewm.event.model.EventState;
+import ru.practicum.ewm.event.model.QEvent;
 import ru.practicum.ewm.event.repository.EventRepository;
 import ru.practicum.ewm.event.service.admin.IEventAdminService;
 
@@ -44,9 +48,33 @@ public class EventAdminService implements IEventAdminService {
                                                 Set<Long> categories,
                                                 LocalDateTime rangeStart,
                                                 LocalDateTime rangeEnd,
-                                                Pageable pageable) {
-        return eventRepository.findAllByInitiator_IdInAndStateInAndCategory_IdInAndEventDateBetween(
-                        users, states, categories, rangeStart, rangeEnd, pageable)
+                                                Integer from,
+                                                Integer size) {
+        if (rangeStart != null && rangeEnd != null) {
+            if (rangeStart.isAfter(rangeEnd)) {
+                throw new BadRequestException(
+                        String.format("rangeStart %s is after rangeEnd %s", rangeStart, rangeEnd));
+            }
+        }
+
+        QEvent event = QEvent.event;
+        BooleanExpression predicate = event.isNotNull();
+        if (users != null && !users.isEmpty()) {
+            predicate = predicate.and(event.initiator.id.in(users));
+        }
+        if (states != null && !states.isEmpty()) {
+            predicate = predicate.and(event.state.in(states));
+        }
+        if (categories != null && !categories.isEmpty()) {
+            predicate = predicate.and(event.category.id.in(categories));
+        }
+        if (!(rangeStart == null || rangeEnd == null)) {
+            predicate = predicate.and(event.eventDate.between(rangeStart, rangeEnd));
+        } else {
+            predicate = predicate.and(event.eventDate.after(LocalDateTime.now()));
+        }
+        Pageable pageable = PageRequest.of(from / size, size);
+        return eventRepository.findAll(predicate, pageable)
                 .stream()
                 .map(EventMapper::toEventFullDtoOut)
                 .collect(Collectors.toList());

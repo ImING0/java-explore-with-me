@@ -23,6 +23,7 @@ public class AdminCompilationController {
     @ResponseStatus(HttpStatus.CREATED)
     public ResponseEntity<CompilationDtoOut> createCompilation(
             @RequestBody @Valid NewCompilationDtoIn compilationDtoIn) {
+        log.info("Creating compilation {}", compilationDtoIn);
         return new ResponseEntity<>(compilationAdminService.create(compilationDtoIn),
                 HttpStatus.CREATED);
     }
