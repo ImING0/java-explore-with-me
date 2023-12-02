@@ -18,11 +18,11 @@ class EventStateAuthorizedUpdater {
      */
     public void updateEventStateInternal(Event existingEvent,
                                          EventUserUpdDtoIn updatedEvent) {
+
+        /*Если есть новое состояние - то обновляем.*/
         if (updatedEvent.getStateAction() == null) {
             return;
-        }
-        /*Если есть новое состояние - то обновляем.*/
-        if (!(updatedEvent.getStateAction() == null)) {
+        } else {
             switch (existingEvent.getState()) {
                 case CANCELED:
                     switch (updatedEvent.getStateAction()) {

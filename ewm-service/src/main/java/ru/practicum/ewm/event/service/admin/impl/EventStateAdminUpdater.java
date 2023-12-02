@@ -21,8 +21,7 @@ class EventStateAdminUpdater {
                                          EventAdminUpdDtoIn updatedEvent) {
         if (updatedEvent.getStateAction() == null) {
             return;
-        }
-        if (updatedEvent.getStateAction() != null) {
+        } else {
             switch (existingEvent.getState()) {
                 case PENDING:
                     switch (updatedEvent.getStateAction()) {
