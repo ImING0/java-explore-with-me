@@ -22,7 +22,10 @@ public class AuthorizedRequestController {
             @PathVariable(name = "userId", required = true) Long userId,
             @RequestParam(name = "eventId", required = true) Long eventId) {
         log.info("createRequest: userId={}, eventId={}", userId, eventId);
-        return new ResponseEntity<>(requestService.create(userId, eventId), HttpStatus.CREATED);
+
+        RequestDtoOut request = requestService.create(userId, eventId);
+
+        return new ResponseEntity<>(request, HttpStatus.CREATED);
     }
 
     @PatchMapping("/{requestId}/cancel")
@@ -31,13 +34,19 @@ public class AuthorizedRequestController {
             @PathVariable(name = "userId", required = true) Long userId,
             @PathVariable(name = "requestId", required = true) Long requestId) {
         log.info("cancelRequest: userId={}, requestId={}", userId, requestId);
-        return ResponseEntity.ok(requestService.cancel(userId, requestId));
+
+        RequestDtoOut request = requestService.cancel(userId, requestId);
+
+        return ResponseEntity.ok(request);
     }
 
     @GetMapping
     public ResponseEntity<List<RequestDtoOut>> getAllForCurrentUser(
             @PathVariable(name = "userId", required = true) Long userId) {
         log.info("getAllForCurrentUser: userId={}", userId);
-        return ResponseEntity.ok(requestService.getAllForCurrentUser(userId));
+
+        List<RequestDtoOut> requests = requestService.getAllForCurrentUser(userId);
+
+        return ResponseEntity.ok(requests);
     }
 }

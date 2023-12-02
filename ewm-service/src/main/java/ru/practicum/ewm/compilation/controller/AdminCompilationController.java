@@ -24,8 +24,10 @@ public class AdminCompilationController {
     public ResponseEntity<CompilationDtoOut> createCompilation(
             @RequestBody @Valid NewCompilationDtoIn compilationDtoIn) {
         log.info("Creating compilation {}", compilationDtoIn);
-        return new ResponseEntity<>(compilationAdminService.create(compilationDtoIn),
-                HttpStatus.CREATED);
+
+        CompilationDtoOut compilation = compilationAdminService.create(compilationDtoIn);
+
+        return new ResponseEntity<>(compilation, HttpStatus.CREATED);
     }
 
     @DeleteMapping("/{compId}")
@@ -39,7 +41,11 @@ public class AdminCompilationController {
     public ResponseEntity<CompilationDtoOut> updateCompById(@PathVariable("compId") Long compId,
                                                             @RequestBody
                                                             @Valid UpdateCompilationDtoIn updateCompilationDtoIn) {
-        return new ResponseEntity<>(compilationAdminService.update(updateCompilationDtoIn, compId),
-                HttpStatus.OK);
+        log.info("Updating compilation with id {}, compilation {}", compId, updateCompilationDtoIn);
+
+        CompilationDtoOut updatedCompilation = compilationAdminService.update(
+                updateCompilationDtoIn, compId);
+
+        return new ResponseEntity<>(updatedCompilation, HttpStatus.OK);
     }
 }

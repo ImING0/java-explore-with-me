@@ -26,7 +26,10 @@ public class AdminUserController {
     @PostMapping
     public ResponseEntity<UserDtoOut> createUser(@RequestBody @Valid UserDtoIn userDtoIn) {
         log.info("Creating user {}", userDtoIn);
-        return new ResponseEntity<>(userService.create(userDtoIn), HttpStatus.CREATED);
+
+        UserDtoOut userDtoOut = userService.create(userDtoIn);
+
+        return new ResponseEntity<>(userDtoOut, HttpStatus.CREATED);
     }
 
     @GetMapping
@@ -35,14 +38,17 @@ public class AdminUserController {
             @RequestParam(name = "from", defaultValue = "0") Integer from,
             @RequestParam(name = "size", defaultValue = "10") Integer size) {
         log.info("Getting users with ids {} from {} to {}", ids, from, from + size);
+
         Pageable pageable = PageRequest.of(from / size, size, Sort.by(Sort.Direction.ASC, "id"));
-        return new ResponseEntity<>(userService.getAll(ids, pageable), HttpStatus.OK);
+        List<UserDtoOut> users = userService.getAll(ids, pageable);
+
+        return new ResponseEntity<>(users, HttpStatus.OK);
     }
 
     @DeleteMapping("/{userId}")
-    public ResponseEntity<Void> deleteUser(@PathVariable Long userId) {
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public void deleteUser(@PathVariable Long userId) {
         log.info("Deleting user with id {}", userId);
         userService.delete(userId);
-        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 }

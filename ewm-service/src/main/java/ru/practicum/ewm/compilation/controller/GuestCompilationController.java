@@ -21,12 +21,22 @@ public class GuestCompilationController {
             @RequestParam(name = "pinned", required = false) Boolean pinned,
             @RequestParam(name = "from", defaultValue = "0") Integer from,
             @RequestParam(name = "size", defaultValue = "10") Integer size) {
-        return ResponseEntity.ok(compilationGuestService.getAllByParams(pinned, from, size));
+        log.info("Get all compilations by params: pinned = {}, from = {}, size = {}", pinned, from,
+                size);
+
+        List<CompilationDtoOut> compilations = compilationGuestService.getAllByParams(pinned, from,
+                size);
+
+        return ResponseEntity.ok(compilations);
     }
 
     @GetMapping("/{compId}")
     public ResponseEntity<CompilationDtoOut> getCompById(
             @PathVariable(name = "compId", required = true) Long compId) {
-        return ResponseEntity.ok(compilationGuestService.getById(compId));
+        log.info("Get compilation by id: {}", compId);
+
+        CompilationDtoOut compilation = compilationGuestService.getById(compId);
+
+        return ResponseEntity.ok(compilation);
     }
 }

@@ -2,7 +2,7 @@ package ru.practicum.ewm.statistic.constant;
 
 /**
  * Класс для хранения общих констант путей и названия приложения,
- * для дальнейшего использования в логики сервисов приложения.
+ * для дальнейшего использования в логике сервисов приложения.
  */
 public class StatsConstants {
     public static final String EWM_MAIN_SERVICE_APP = "ewm-main-service";

@@ -32,7 +32,10 @@ public class AuthorizedEventController {
                                                        @RequestBody
                                                        @Valid NewEventDtoIn newEventDtoIn) {
         log.info("Creating event for user with id {} newEventDtoIn {}", userId, newEventDtoIn);
-        return new ResponseEntity<>(eventService.create(newEventDtoIn, userId), HttpStatus.CREATED);
+
+        EventFullDtoOut eventFullDtoOut = eventService.create(newEventDtoIn, userId);
+
+        return new ResponseEntity<>(eventFullDtoOut, HttpStatus.CREATED);
     }
 
     @GetMapping
@@ -41,9 +44,12 @@ public class AuthorizedEventController {
             @RequestParam(name = "from", defaultValue = "0") Integer from,
             @RequestParam(name = "size", defaultValue = "10") Integer size) {
         log.info("Getting all events for user with id {}", userId);
+
         Pageable pageable = PageRequest.of(from / size, size,
                 Sort.by(Sort.Direction.DESC, "eventDate"));
-        return ResponseEntity.ok(eventService.getAllForCurrentUser(userId, pageable));
+        List<EventShortDtoOut> events = eventService.getAllForCurrentUser(userId, pageable);
+
+        return ResponseEntity.ok(events);
     }
 
     @GetMapping("/{eventId}")
@@ -51,7 +57,10 @@ public class AuthorizedEventController {
             @PathVariable(name = "userId", required = true) Long userId,
             @PathVariable(name = "eventId", required = true) Long eventId) {
         log.info("Getting event with id {} for user with id {}", eventId, userId);
-        return ResponseEntity.ok(eventService.getByIdForCurrentUser(userId, eventId));
+
+        EventFullDtoOut eventFullDtoOut = eventService.getByIdForCurrentUser(userId, eventId);
+
+        return ResponseEntity.ok(eventFullDtoOut);
     }
 
     @PatchMapping("/{eventId}")
@@ -60,8 +69,11 @@ public class AuthorizedEventController {
             @PathVariable(name = "userId", required = true) Long userId,
             @PathVariable(name = "eventId", required = true) Long eventId) {
         log.info("Updating event with id {} for user with id {}", eventId, userId);
-        return ResponseEntity.ok(
-                eventService.updateForCurrentUser(eventUserUpdDtoIn, userId, eventId));
+
+        EventFullDtoOut eventFullDtoOut = eventService.updateForCurrentUser(eventUserUpdDtoIn,
+                userId, eventId);
+
+        return ResponseEntity.ok(eventFullDtoOut);
     }
 
     @GetMapping("/{eventId}/requests")
@@ -70,8 +82,11 @@ public class AuthorizedEventController {
             @PathVariable(name = "eventId", required = true) Long eventId) {
         log.info("Getting all requests for event with id {} for user with id {} e", eventId,
                 userId);
-        return ResponseEntity.ok(
-                eventService.getAllRequestByEventIdForCurrentUser(userId, eventId));
+
+        List<RequestDtoOut> requests = eventService.getAllRequestByEventIdForCurrentUser(userId,
+                eventId);
+
+        return ResponseEntity.ok(requests);
     }
 
     @PatchMapping("/{eventId}/requests")
@@ -83,8 +98,10 @@ public class AuthorizedEventController {
                 "Updating requests status for event with id {} for user with id {} eventRequestStatusUpdDtoIn {}",
                 eventId, userId, eventRequestStatusUpdDtoIn);
 
-        return ResponseEntity.ok(
-                eventService.updateRequestsStatusForCurrentUser(eventRequestStatusUpdDtoIn, userId,
-                        eventId));
+        EventRequestStatusUpdDtoOut eventRequestStatusUpdDtoOut
+                = eventService.updateRequestsStatusForCurrentUser(eventRequestStatusUpdDtoIn,
+                userId, eventId);
+
+        return ResponseEntity.ok(eventRequestStatusUpdDtoOut);
     }
 }

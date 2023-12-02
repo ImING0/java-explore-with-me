@@ -30,13 +30,16 @@ public class GuestEventController {
             @PathVariable(name = "id", required = true) Long id,
             HttpServletRequest httpServletRequest) {
         log.info("getById: id = {}, userIp = {}", id, httpServletRequest.getRemoteAddr());
+
         StatsRequestDto statsRequestDto = StatsRequestDto.builder()
                 .app(StatsConstants.EWM_MAIN_SERVICE_APP)
                 .ip(httpServletRequest.getRemoteAddr())
                 .uri(StatsConstants.EVENT_BASE_GUEST_PATH + "/" + id)
                 .timestamp(LocalDateTime.now())
                 .build();
-        return ResponseEntity.ok(eventGuestService.getById(id, statsRequestDto));
+        EventFullDtoOut eventFullDtoOut = eventGuestService.getById(id, statsRequestDto);
+
+        return ResponseEntity.ok(eventFullDtoOut);
     }
 
     @GetMapping
@@ -57,14 +60,17 @@ public class GuestEventController {
                         + "rangeEnd = {}, onlyAvailable = {}, sort = {}, from = {}, size = {}, "
                         + "userIp = {}", text, categories, paid, rangeStart, rangeEnd, onlyAvailable, sort,
                 from, size, httpServletRequest.getRemoteAddr());
+
         StatsRequestDto statsRequestDto = StatsRequestDto.builder()
                 .app(StatsConstants.EWM_MAIN_SERVICE_APP)
                 .ip(httpServletRequest.getRemoteAddr())
                 .uri(StatsConstants.EVENT_BASE_GUEST_PATH)
                 .timestamp(LocalDateTime.now())
                 .build();
-        return ResponseEntity.ok(
-                eventGuestService.getAllByParams(text, categories, paid, rangeStart, rangeEnd,
-                        onlyAvailable, sort, from, size, statsRequestDto));
+        List<EventShortDtoOut> eventsShortDtoOutList = eventGuestService.getAllByParams(text,
+                categories, paid, rangeStart, rangeEnd, onlyAvailable, sort, from, size,
+                statsRequestDto);
+
+        return ResponseEntity.ok(eventsShortDtoOutList);
     }
 }

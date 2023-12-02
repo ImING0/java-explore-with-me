@@ -25,13 +25,19 @@ public class GuestCategoryController {
             @RequestParam(name = "from", defaultValue = "0") @PositiveOrZero Integer from,
             @RequestParam(name = "size", defaultValue = "10") @PositiveOrZero Integer size) {
         log.info("Getting categories from {} to {}", from, from + size);
+
         Pageable pageable = PageRequest.of(from / size, size, Sort.by(Sort.Direction.DESC, "id"));
-        return ResponseEntity.ok(categoryGuestService.getAll(pageable));
+        List<CategoryDtoOut> allCategories = categoryGuestService.getAll(pageable);
+
+        return ResponseEntity.ok(allCategories);
     }
 
     @GetMapping("/{catId}")
     public ResponseEntity<CategoryDtoOut> getCategoryById(@PathVariable Long catId) {
         log.info("Getting category with id {}", catId);
-        return ResponseEntity.ok(categoryGuestService.getById(catId));
+
+        CategoryDtoOut category = categoryGuestService.getById(catId);
+
+        return ResponseEntity.ok(category);
     }
 }

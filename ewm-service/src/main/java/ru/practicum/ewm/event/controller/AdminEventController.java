@@ -28,7 +28,10 @@ public class AdminEventController {
             @PathVariable(name = "eventId", required = true) Long eventId,
             @RequestBody @Valid EventAdminUpdDtoIn eventAdminUpdDtoIn) {
         log.info("updateEvent: eventId={}, eventAdminUpdDtoIn={}", eventId, eventAdminUpdDtoIn);
-        return ResponseEntity.ok(eventAdminService.update(eventAdminUpdDtoIn, eventId));
+
+        EventFullDtoOut eventFullDtoOut = eventAdminService.update(eventAdminUpdDtoIn, eventId);
+
+        return ResponseEntity.ok(eventFullDtoOut);
     }
 
     @GetMapping
@@ -45,8 +48,10 @@ public class AdminEventController {
         log.info(
                 "getAllByParams: users={}, states={}, categories={}, rangeStart={}, rangeEnd={}, from={}, size={}",
                 users, states, categories, rangeStart, rangeEnd, from, size);
-        return ResponseEntity.ok(
-                eventAdminService.getAllByParams(users, states, categories, rangeStart, rangeEnd,
-                        from, size));
+
+        List<EventFullDtoOut> events = eventAdminService.getAllByParams(users, states, categories,
+                rangeStart, rangeEnd, from, size);
+
+        return ResponseEntity.ok(events);
     }
 }

@@ -22,7 +22,10 @@ public class AdminCategoryController {
     public ResponseEntity<CategoryDtoOut> createCategory(
             @RequestBody @Valid CategoryDtoIn categoryDtoIn) {
         log.info("Creating category {}", categoryDtoIn);
-        return new ResponseEntity<>(categoryService.create(categoryDtoIn), HttpStatus.CREATED);
+
+        CategoryDtoOut newCategory = categoryService.create(categoryDtoIn);
+
+        return new ResponseEntity<>(newCategory, HttpStatus.CREATED);
     }
 
     @PatchMapping("/{catId}")
@@ -30,14 +33,17 @@ public class AdminCategoryController {
             @RequestBody @Valid CategoryDtoIn categoryDtoIn,
             @PathVariable Long catId) {
         log.info("Updating category with id {}", catId);
-        return new ResponseEntity<>(categoryService.update(categoryDtoIn, catId), HttpStatus.OK);
+
+        CategoryDtoOut updatedCategory = categoryService.update(categoryDtoIn, catId);
+
+        return new ResponseEntity<>(updatedCategory, HttpStatus.OK);
     }
 
     @DeleteMapping("/{catId}")
-    public ResponseEntity<Void> deleteCategory(@PathVariable Long catId) {
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public void deleteCategory(@PathVariable Long catId) {
         log.info("Deleting category with id {}", catId);
+
         categoryService.delete(catId);
-        return ResponseEntity.noContent()
-                .build();
     }
 }
