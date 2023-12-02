@@ -43,20 +43,23 @@ class EventDateAuthorizedUpdater {
         EventState currentState = existingEvent.getState();
         LocalDateTime existingEventDateTime = existingEvent.getEventDate();
         LocalDateTime updatedEventDateTime = updatedEvent.getEventDate();
-        LocalDateTime currentDateTime = LocalDateTime.now();
         Long hoursLimit = 2L;
 
+        if (updatedEventDateTime == null && newState == null) {
+            return;
+        }
         /*если даты нет и нет нового статуса, значит это простое изменение каких-то других полй
         мы не заходим в условия
         Здесь проверяем только если есть новый статус и дата*/
         if ((updatedEventDateTime != null) && (newState != null)) {
+            boolean isValidInterval = isIntervalMoreThanHours(LocalDateTime.now(),
+                    updatedEventDateTime, hoursLimit); // Новая дата за час до публикации?
             switch (currentState) {
                 case CANCELED:
                     switch (newState) {
                         case CANCEL_REVIEW:
                         case SEND_TO_REVIEW:
-                            if (!isIntervalMoreThanHours(currentDateTime, updatedEventDateTime,
-                                    hoursLimit)) {
+                            if (!isValidInterval) {
                                 throw new DataConflictException(String.format(
                                         "Event date and time must be at least %d hours from now, but it's %s",
                                         hoursLimit, updatedEventDateTime));
@@ -69,8 +72,7 @@ class EventDateAuthorizedUpdater {
                     switch (newState) {
                         case SEND_TO_REVIEW:
                         case CANCEL_REVIEW:
-                            if (!isIntervalMoreThanHours(currentDateTime, updatedEventDateTime,
-                                    hoursLimit)) {
+                            if (!isValidInterval) {
                                 throw new DataConflictException(String.format(
                                         "Event date and time must be at least %d hours from now, but it's %s",
                                         hoursLimit, updatedEventDateTime));
@@ -79,6 +81,7 @@ class EventDateAuthorizedUpdater {
                                 break;
                             }
                     }
+                    break;
                 case PUBLISHED:
                     throw new DataConflictException(String.format(
                             "Event date and time can't be changed after publication, but it's %s",
@@ -88,11 +91,12 @@ class EventDateAuthorizedUpdater {
 
         /*Пришло только новое время, без состояния*/
         if (updatedEventDateTime != null && newState == null) {
+            boolean isValidInterval = isIntervalMoreThanHours(LocalDateTime.now(),
+                    updatedEventDateTime, hoursLimit);
             switch (currentState) {
                 case CANCELED:
                 case PENDING:
-                    if (!isIntervalMoreThanHours(currentDateTime, updatedEventDateTime,
-                            hoursLimit)) {
+                    if (!isValidInterval) {
                         throw new DataConflictException(String.format(
                                 "Event date and time must be at least %d hours from now, but it's %s",
                                 hoursLimit, updatedEventDateTime));
@@ -114,7 +118,7 @@ class EventDateAuthorizedUpdater {
                         case CANCEL_REVIEW:
                             break;
                         case SEND_TO_REVIEW:
-                            if (!isIntervalMoreThanHours(currentDateTime, existingEventDateTime,
+                            if (!isIntervalMoreThanHours(LocalDateTime.now(), existingEventDateTime,
                                     hoursLimit)) {
                                 throw new DataConflictException(String.format(
                                         "Event date and time must be at least %d hours from now, but it's %s",
@@ -126,7 +130,7 @@ class EventDateAuthorizedUpdater {
                 case PENDING:
                     switch (newState) {
                         case SEND_TO_REVIEW:
-                            if (!isIntervalMoreThanHours(currentDateTime, existingEventDateTime,
+                            if (!isIntervalMoreThanHours(LocalDateTime.now(), existingEventDateTime,
                                     hoursLimit)) {
                                 throw new DataConflictException(String.format(
                                         "Event date and time must be at least %d hours from now, but it's %s",

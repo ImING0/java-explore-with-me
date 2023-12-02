@@ -230,7 +230,7 @@ public class EventAuthorizedService implements IEventAuthorizedService {
 
         EventDateAuthorizedUpdater.updateEventDateTimeInternal(existingEvent, updatedEvent);
 
-        EventStateUserUpdater.updateEventStateInternal(existingEvent, updatedEvent);
+        EventStateAuthorizedUpdater.updateEventStateInternal(existingEvent, updatedEvent);
         Category newCategory = updatedEvent.getCategory() != null ? getCategoryOrThrow(
                 updatedEvent.getCategory()) : existingEvent.getCategory();
         EventFieldsAuthorizedUpdater.updateEventFieldsInternal(existingEvent, updatedEvent,

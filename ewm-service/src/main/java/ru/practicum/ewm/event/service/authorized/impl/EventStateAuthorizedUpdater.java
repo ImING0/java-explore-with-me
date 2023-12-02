@@ -9,7 +9,7 @@ import ru.practicum.ewm.event.model.EventState;
  * Обновление состояния события для авторизованного пользователя.
  */
 @UtilityClass
-class EventStateUserUpdater {
+class EventStateAuthorizedUpdater {
     /**
      * Обновление состояния события для авторизованного пользователя.
      *
@@ -18,6 +18,9 @@ class EventStateUserUpdater {
      */
     public void updateEventStateInternal(Event existingEvent,
                                          EventUserUpdDtoIn updatedEvent) {
+        if (updatedEvent.getStateAction() == null) {
+            return;
+        }
         /*Если есть новое состояние - то обновляем.*/
         if (!(updatedEvent.getStateAction() == null)) {
             switch (existingEvent.getState()) {

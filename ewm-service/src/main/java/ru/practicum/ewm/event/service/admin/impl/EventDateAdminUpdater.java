@@ -43,9 +43,11 @@ class EventDateAdminUpdater {
         EventState currentState = existingEvent.getState();
         LocalDateTime existingEventDateTime = existingEvent.getEventDate();
         LocalDateTime updatedEventDateTime = updatedEvent.getEventDate();
-        LocalDateTime currentDateTime = LocalDateTime.now();
         Long hoursLimit = 1L;
 
+        if (updatedEventDateTime == null && newState == null) {
+            return;
+        }
         /*если даты нет и нет нового статуса, значит это простое изменение каких-то других полй
         мы не заходим в условия
         Здесь проверяем только если есть новый статус и дата*/
@@ -72,13 +74,9 @@ class EventDateAdminUpdater {
                     }
                     break;
                 case PUBLISHED:
-                    /*Если событие опубликовано, то ставим запрет на какое - либо изменение даты и
-                    времени*/
-                    throw new DataConflictException(String.format(
-                            "Event with id %d can't be updated, because it's state is %s",
-                            existingEvent.getId(), existingEvent.getState()));
                 case CANCELED:
-                        /*Если событие отменено, то ставим запрет на какое - либо изменение даты и
+                        /*Если событие отменено/опубликовано, то ставим запрет на какое - либо
+                        изменение даты и
                         времени*/
                     throw new DataConflictException(String.format(
                             "Event with id %d can't be updated, because it's state is %s",
@@ -125,7 +123,7 @@ class EventDateAdminUpdater {
                                         existingEvent.getId(), existingEventDateTime, hoursLimit));
                             } else {
                                 /*Ставим дату публикации события*/
-                                existingEvent.setEventDate(currentDateTime);
+                                existingEvent.setEventDate(LocalDateTime.now());
                                 return;
                             }
                         case REJECT_EVENT:
@@ -134,12 +132,6 @@ class EventDateAdminUpdater {
                     }
                     break;
                 case PUBLISHED:
-                    switch (newState) {
-                        case PUBLISH_EVENT:
-                        case REJECT_EVENT:
-                            /*Оставляем без изменений*/
-                            break;
-                    }
                 case CANCELED:
                     switch (newState) {
                         case PUBLISH_EVENT:
@@ -148,7 +140,6 @@ class EventDateAdminUpdater {
                             break;
                     }
             }
-            return;
         }
     }
 }
