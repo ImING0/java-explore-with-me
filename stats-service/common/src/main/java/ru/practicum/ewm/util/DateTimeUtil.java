@@ -13,6 +13,10 @@ public class DateTimeUtil {
     public static final DateTimeFormatter DATE_TIME_FORMATTER = DateTimeFormatter.ofPattern(
             DATE_TIME_FORMAT);
 
+    public static String getLocalDateTimeAsString(LocalDateTime localDateTime) {
+        return localDateTime.format(DATE_TIME_FORMATTER);
+    }
+
     public static String encodeDateTimeToString(LocalDateTime localDateTime) {
         String formattedDateTime = localDateTime.format(DATE_TIME_FORMATTER);
         return URLEncoder.encode(formattedDateTime, StandardCharsets.UTF_8);

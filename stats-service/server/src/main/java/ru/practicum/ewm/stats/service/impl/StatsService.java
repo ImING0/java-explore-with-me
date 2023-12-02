@@ -4,6 +4,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import ru.practicum.ewm.dto.StatsRequestDto;
 import ru.practicum.ewm.dto.StatsResponseDto;
+import ru.practicum.ewm.stats.error.BadRequestException;
 import ru.practicum.ewm.stats.mapper.StatsMapper;
 import ru.practicum.ewm.stats.model.Stats;
 import ru.practicum.ewm.stats.repository.StatsRepository;
@@ -30,10 +31,13 @@ public class StatsService implements IStatsService {
                                       LocalDateTime end,
                                       Set<String> uris,
                                       boolean unique) {
-        if (unique) {
-            return statsRepository.findAllStatsUnique(start, end, uris);
-        } else {
-            return statsRepository.findAllStats(start, end, uris);
+        if (start != null && end != null) {
+            if (start.isAfter(end)) {
+                throw new BadRequestException(
+                        String.format("rangeStart %s is after rangeEnd %s", start, end));
+            }
         }
+        return unique ? statsRepository.findAllStatsUnique(start, end, uris)
+                : statsRepository.findAllStats(start, end, uris);
     }
 }

@@ -33,30 +33,42 @@ spring:
       ddl-auto: none
     properties:
       hibernate:
-        dialect: org.hibernate.dialect.PostgreSQL10Dialect
+        dialect: org.hibernate.dialect.PostgreSQLDialect # был PostgreSQL10Dialect
         format_sql: true
         show_sql: true
-  sql:
-    init:
-      mode: always
+  flyway:
+    enabled: true
+    baseline-on-migrate: true
+  #sql:
+    #init:
+      #mode: always
+      #schema-locations: classpath:V1__Initial_schema.sql
+      #data-locations: classpath:V2__Create_trigger.sql
   config:
     activate:
       on-profile: default
   datasource:
     driverClassName: org.postgresql.Driver
-    url: jdbc:postgresql://localhost:5431/ewm
+    url: jdbc:postgresql://localhost:5432/ewm-main-db
     username: postgres
     password: postgres
 
 logging:
   level:
+    io.hypersistence: trace
+    org.hibernate.SQL: debug # не было
+    # Для логирования значений параметров, раскомментируйте следующую строку:
+    org.hibernate.type.descriptor.sql: trace # не было
+    org.springframework: debug # был info
     org.springframework.orm.jpa: INFO
     org.springframework.transaction: INFO
     org.springframework.transaction.interceptor: TRACE
     org.springframework.orm.jpa.JpaTransactionManager: INFO # был дебаг
 server:
   port: 8080
-
+stats:
+  server:
+    url: ${STATS_SERVER_URL:http://localhost:9090}
 ---
 # для тестов в контейнере
 
@@ -66,23 +78,26 @@ spring:
       ddl-auto: none
     properties:
       hibernate:
-        dialect: org.hibernate.dialect.PostgreSQL10Dialect
+        dialect: org.hibernate.dialect.PostgreSQLDialect
         format_sql: true
         show_sql: true
-  sql:
-    init:
-      mode: always
+  flyway:
+    enabled: true
+    baseline-on-migrate: true
+  #sql:
+   # init:
+    #  mode: always
   config:
     activate:
       on-profile: docker
   datasource:
     driverClassName: org.postgresql.Driver
-    url: ${SPRING_DATASOURCE_URL:jdbc:postgresql://db:5431/ewm}
-    username: ${DB_USERNAME:postgres}
-    password: ${DB_PASSWORD:postgres}
+    url: ${SPRING_DATASOURCE_URL}
+    username: ${DB_USERNAME}
+    password: ${DB_PASSWORD}
 stats:
   server:
-    url: ${STATS_SERVER_URL:http://localhost:9090}
+    url: ${STATS_SERVER_URL}
 logging:
   level:
     org.springframework.orm.jpa: INFO

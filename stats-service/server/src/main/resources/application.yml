@@ -57,7 +57,6 @@ logging:
     org.springframework.orm.jpa.JpaTransactionManager: INFO # был дебаг
 server:
   port: 9090
-
 ---
 # для тестов в контейнере
 
@@ -78,9 +77,9 @@ spring:
       on-profile: docker
   datasource:
     driverClassName: org.postgresql.Driver
-    url: ${SPRING_DATASOURCE_URL:jdbc:postgresql://db:5432/stats}
-    username: ${DB_USERNAME:postgres}
-    password: ${DB_PASSWORD:postgres}
+    url: ${SPRING_DATASOURCE_URL}
+    username: ${DB_USERNAME}
+    password: ${DB_PASSWORD}
 
 logging:
   level:
