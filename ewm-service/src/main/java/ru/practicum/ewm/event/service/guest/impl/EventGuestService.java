@@ -8,7 +8,6 @@ import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import ru.practicum.ewm.dto.StatsRequestDto;
-import ru.practicum.ewm.error.BadRequestException;
 import ru.practicum.ewm.error.ResourceNotFoundException;
 import ru.practicum.ewm.event.dto.event.EventFullDtoOut;
 import ru.practicum.ewm.event.dto.event.EventShortDtoOut;
@@ -72,13 +71,6 @@ public class EventGuestService implements IEventGuestService {
                                                  StatsRequestDto statsRequestDto) {
         /*Регистрируем, что был запрос, даже если нет Евента*/
         eventStatisticService.addHit(statsRequestDto);
-
-        if (rangeStart != null && rangeEnd != null) {
-            if (rangeStart.isAfter(rangeEnd)) {
-                throw new BadRequestException(
-                        String.format("rangeStart %s is after rangeEnd %s", rangeStart, rangeEnd));
-            }
-        }
 
         QEvent event = QEvent.event;
         BooleanExpression predicate = event.isNotNull();

@@ -6,6 +6,7 @@ import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import ru.practicum.ewm.dto.StatsRequestDto;
+import ru.practicum.ewm.error.BadRequestException;
 import ru.practicum.ewm.event.dto.event.EventFullDtoOut;
 import ru.practicum.ewm.event.dto.event.EventShortDtoOut;
 import ru.practicum.ewm.event.service.guest.IEventGuestService;
@@ -61,6 +62,12 @@ public class GuestEventController {
                         + "userIp = {}", text, categories, paid, rangeStart, rangeEnd, onlyAvailable, sort,
                 from, size, httpServletRequest.getRemoteAddr());
 
+        if (rangeStart != null && rangeEnd != null) {
+            if (rangeStart.isAfter(rangeEnd)) {
+                throw new BadRequestException(
+                        String.format("rangeStart %s is after rangeEnd %s", rangeStart, rangeEnd));
+            }
+        }
         StatsRequestDto statsRequestDto = StatsRequestDto.builder()
                 .app(StatsConstants.EWM_MAIN_SERVICE_APP)
                 .ip(httpServletRequest.getRemoteAddr())

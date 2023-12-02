@@ -37,7 +37,7 @@ public class CompilationAdminService implements ICompilationAdminService {
                 CompilationMapper.toCompilation(newCompilationDtoIn));
         log.info("Created compilation with id {}", compilation.getId());
         Set<Long> eventIds = newCompilationDtoIn.getEvents();
-        /*Если нет евентов значит пустая подборка. Уже создали, посто вернем ее.*/
+        /*Если нет евентов значит пустая подборка. Уже создали, просто вернем ее.*/
         if (eventIds == null || eventIds.isEmpty()) {
             return CompilationMapper.toCompilationDtoOut(compilation);
         }
@@ -47,9 +47,7 @@ public class CompilationAdminService implements ICompilationAdminService {
         existingEvents.forEach(event1 -> event1.setCompilation(compilation));
         eventRepository.saveAllAndFlush(existingEvents);
         compilation.setEvents(existingEvents);
-        /*Пытался запросить в рамках этой транзакции сохраненную компиляцию со всеми эвентами,
-         * но увы, в маппер почему - то при всех раскладах попадала компиляция с евентами null,
-         * хотя все остальные поля были заполнены. Ну зато минус лишний запрос к бд)*/
+
         return CompilationMapper.toCompilationDtoOut(compilation);
     }
 
@@ -65,8 +63,7 @@ public class CompilationAdminService implements ICompilationAdminService {
     public CompilationDtoOut update(UpdateCompilationDtoIn updateCompilationDtoIn,
                                     Long compId) {
         Compilation existingCompilation = getCompilationOrThrow(compId);
-        if (updateCompilationDtoIn.getTitle() != null && !updateCompilationDtoIn.getTitle()
-                .isBlank()) {
+        if (updateCompilationDtoIn.getTitle() != null) {
             if (existingCompilation.getTitle()
                     .equals(updateCompilationDtoIn.getTitle())) {
                 throw new DataConflictException(

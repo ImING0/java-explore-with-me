@@ -37,10 +37,7 @@ public class StatsService implements IStatsService {
                         String.format("rangeStart %s is after rangeEnd %s", start, end));
             }
         }
-        if (unique) {
-            return statsRepository.findAllStatsUnique(start, end, uris);
-        } else {
-            return statsRepository.findAllStats(start, end, uris);
-        }
+        return unique ? statsRepository.findAllStatsUnique(start, end, uris)
+                : statsRepository.findAllStats(start, end, uris);
     }
 }

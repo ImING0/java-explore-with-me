@@ -5,6 +5,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import ru.practicum.ewm.error.BadRequestException;
 import ru.practicum.ewm.event.dto.event.EventAdminUpdDtoIn;
 import ru.practicum.ewm.event.dto.event.EventFullDtoOut;
 import ru.practicum.ewm.event.model.EventState;
@@ -49,6 +50,12 @@ public class AdminEventController {
                 "getAllByParams: users={}, states={}, categories={}, rangeStart={}, rangeEnd={}, from={}, size={}",
                 users, states, categories, rangeStart, rangeEnd, from, size);
 
+        if (rangeStart != null && rangeEnd != null) {
+            if (rangeStart.isAfter(rangeEnd)) {
+                throw new BadRequestException(
+                        String.format("rangeStart %s is after rangeEnd %s", rangeStart, rangeEnd));
+            }
+        }
         List<EventFullDtoOut> events = eventAdminService.getAllByParams(users, states, categories,
                 rangeStart, rangeEnd, from, size);
 

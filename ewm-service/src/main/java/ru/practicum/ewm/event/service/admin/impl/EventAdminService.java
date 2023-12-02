@@ -9,7 +9,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import ru.practicum.ewm.category.model.Category;
 import ru.practicum.ewm.category.repository.CategoryRepository;
-import ru.practicum.ewm.error.BadRequestException;
 import ru.practicum.ewm.error.ResourceNotFoundException;
 import ru.practicum.ewm.event.dto.event.EventAdminUpdDtoIn;
 import ru.practicum.ewm.event.dto.event.EventFullDtoOut;
@@ -51,12 +50,6 @@ public class EventAdminService implements IEventAdminService {
                                                 LocalDateTime rangeEnd,
                                                 Integer from,
                                                 Integer size) {
-        if (rangeStart != null && rangeEnd != null) {
-            if (rangeStart.isAfter(rangeEnd)) {
-                throw new BadRequestException(
-                        String.format("rangeStart %s is after rangeEnd %s", rangeStart, rangeEnd));
-            }
-        }
 
         QEvent event = QEvent.event;
         BooleanExpression predicate = event.isNotNull();
