@@ -31,4 +31,41 @@ public class AuthorizedCommentController {
 
         return new ResponseEntity<>(commentDtoOut, HttpStatus.CREATED);
     }
+
+    @PatchMapping("/{commId}")
+    public ResponseEntity<CommentDtoOut> update(
+            @PathVariable(name = "userId", required = true) Long userId,
+            @PathVariable(name = "eventId", required = true) Long eventId,
+            @PathVariable(name = "commId", required = true) Long commId,
+            @RequestBody @Valid CommentDtoIn commentDtoIn) {
+        log.info("update: userId={}, eventId={}, commId={}, commentDtoIn={}", userId, eventId,
+                commId, commentDtoIn);
+
+        CommentDtoOut commentDtoOut = authorizedCommentService.update(userId, eventId, commId,
+                commentDtoIn);
+
+        return ResponseEntity.ok(commentDtoOut);
+    }
+
+    /**
+     * Закрепить/открепить комментарий
+     *
+     * @param userId  id инициатора события
+     * @param eventId id события
+     * @param commId  id комментария
+     * @param pinned  true - закрепить, false - открепить
+     * @return CommentDtoOut
+     */
+    @PatchMapping("/{commId}/pin")
+    public ResponseEntity<CommentDtoOut> pinComment(
+            @PathVariable(name = "userId", required = true) Long userId,
+            @PathVariable(name = "eventId", required = true) Long eventId,
+            @PathVariable(name = "commId", required = true) Long commId,
+            @RequestParam(name = "pinned", required = true) Boolean pinned) {
+        log.info("pinComment: userId={}, eventId={}, commId={}", userId, eventId, commId);
+
+        CommentDtoOut commentDtoOut = authorizedCommentService.pin(userId, eventId, commId, pinned);
+
+        return ResponseEntity.ok(commentDtoOut);
+    }
 }

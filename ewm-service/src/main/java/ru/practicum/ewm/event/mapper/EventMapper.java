@@ -3,6 +3,7 @@ package ru.practicum.ewm.event.mapper;
 import lombok.experimental.UtilityClass;
 import ru.practicum.ewm.category.mapper.CategoryMapper;
 import ru.practicum.ewm.category.model.Category;
+import ru.practicum.ewm.comment.mapper.CommentMapper;
 import ru.practicum.ewm.event.dto.event.EventFullDtoOut;
 import ru.practicum.ewm.event.dto.event.EventShortDtoOut;
 import ru.practicum.ewm.event.dto.event.NewEventDtoIn;
@@ -11,6 +12,9 @@ import ru.practicum.ewm.event.model.EventState;
 import ru.practicum.ewm.event.model.Location;
 import ru.practicum.ewm.user.mapper.UserMapper;
 import ru.practicum.ewm.user.model.User;
+
+import java.util.Set;
+import java.util.stream.Collectors;
 
 /**
  * Класс для преобразования сущностей Event в DTO и обратно
@@ -47,6 +51,7 @@ public class EventMapper {
                 .paid(newEventDtoIn.isPaid())
                 .requestModeration(newEventDtoIn.isRequestModeration())
                 .views(0L) //при создании события количество просмотров равно 0
+                .comments(Set.of()) //при создании нет комментариев
                 .build();
     }
 
@@ -74,7 +79,10 @@ public class EventMapper {
                 .location(LocationMapper.toDtoOut(event.getLocation()))
                 .paid(event.getPaid())
                 .requestModeration(event.getRequestModeration())
-                .comments(event.getComments())
+                .comments(event.getComments()
+                        .stream()
+                        .map(CommentMapper::toCommentDtoOut)
+                        .collect(Collectors.toSet()))
                 .build();
     }
 

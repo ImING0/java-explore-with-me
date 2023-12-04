@@ -1,10 +1,7 @@
 package ru.practicum.ewm.event.model;
 
 import io.hypersistence.utils.hibernate.type.basic.PostgreSQLEnumType;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.Type;
 import org.hibernate.annotations.TypeDef;
@@ -23,6 +20,7 @@ import java.util.Set;
 /* TypeDef почему и зачем
 https://vladmihalcea.com/the-best-way-to-map-an-enum-type-with-jpa-and-hibernate/*/
 @Data
+@EqualsAndHashCode(exclude = {"comments"})
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor

@@ -34,7 +34,7 @@ public class CommentMapper {
                 .state(CommentState.VISIBLE)
                 .commentator(commentator)
                 .event(event)
-                .pinned(false)
+                .pinned(false) //при создании комментария он не закреплен
                 .build();
     }
 

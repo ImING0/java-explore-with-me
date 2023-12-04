@@ -1,10 +1,7 @@
 package ru.practicum.ewm.comment.model;
 
 import io.hypersistence.utils.hibernate.type.basic.PostgreSQLEnumType;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.Type;
 import org.hibernate.annotations.TypeDef;
@@ -20,6 +17,7 @@ import java.time.LocalDateTime;
 /* TypeDef почему и зачем
 https://vladmihalcea.com/the-best-way-to-map-an-enum-type-with-jpa-and-hibernate/*/
 @Data
+@EqualsAndHashCode(exclude = {"event"})
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor

@@ -4,7 +4,7 @@ import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.Builder;
 import lombok.Data;
 import ru.practicum.ewm.category.dto.CategoryDtoOut;
-import ru.practicum.ewm.comment.model.Comment;
+import ru.practicum.ewm.comment.dto.CommentDtoOut;
 import ru.practicum.ewm.event.model.EventState;
 import ru.practicum.ewm.user.dto.UserShortDtoOut;
 import ru.practicum.ewm.util.DateTimeUtil;
@@ -40,5 +40,5 @@ public class EventFullDtoOut {
     private Boolean paid;
     private Boolean requestModeration;
     /*Комментарии*/
-    private Set<Comment> comments;
+    private Set<CommentDtoOut> comments;
 }
