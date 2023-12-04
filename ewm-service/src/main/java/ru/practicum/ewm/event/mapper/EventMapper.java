@@ -74,6 +74,7 @@ public class EventMapper {
                 .location(LocationMapper.toDtoOut(event.getLocation()))
                 .paid(event.getPaid())
                 .requestModeration(event.getRequestModeration())
+                .comments(event.getComments())
                 .build();
     }
 

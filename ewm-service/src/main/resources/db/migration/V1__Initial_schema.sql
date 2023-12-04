@@ -1,14 +1,10 @@
-DROP TYPE IF EXISTS event_state cascade;
-DROP TYPE IF EXISTS request_status cascade;
-DROP TABLE IF EXISTS categories cascade;
-DROP TABLE IF EXISTS users CASCADE;
-DROP TABLE IF EXISTS events CASCADE;
-DROP TABLE IF EXISTS requests CASCADE;
-DROP TABLE IF EXISTS compilations CASCADE;
 create type event_state as enum ('PENDING', 'PUBLISHED', 'CANCELED');
+
 create type request_status as enum ('PENDING', 'CONFIRMED', 'REJECTED', 'CANCELED');
 
+create type commentator_role as enum ('AUTHORIZED', 'INITIATOR', 'ADMIN');
 
+create type comment_state as enum ('DELETED_BY_USER', 'DELETED_BY_ADMIN', 'VISIBLE');
 
 create table if not exists categories
 (
@@ -172,9 +168,46 @@ comment on constraint requests_requester_id_users_id_fk on requests is 'Огра
 
 comment on constraint requests_event_id_events_id_fk on requests is 'Ограничение по внешнему ключу id таблицы event';
 
-CREATE OR REPLACE FUNCTION update_confirmed_requests()
-    RETURNS TRIGGER
-    LANGUAGE plpgsql AS $$
+create table if not exists comments
+(
+    id               bigint generated always as identity,
+    comment_text     varchar(10000)        not null,
+    event_id         bigint                not null,
+    commentator_id   bigint,
+    commentator_role commentator_role      not null,
+    comment_state    comment_state         not null,
+    pinned           boolean default false not null,
+    created_on       timestamp             not null,
+    constraint comment_id_pk
+        primary key (id),
+    constraint comments_event_id_events_id_fk
+        foreign key (event_id) references events
+            on update cascade on delete cascade,
+    constraint comments_commentator_id_users_id_fk
+        foreign key (commentator_id) references users
+            on update cascade,
+    constraint check_comment_text_min_length
+        check (length((comment_text)::text) >= 1)
+);
+
+comment on column comments.comment_text is 'Текст комментария';
+
+comment on column comments.event_id is 'ID События, к которому добавлен комментарий';
+
+comment on column comments.commentator_id is 'ID Юзера, который оставил комментарий, если оставил админ, то null, если пользователь удален, то оставляем без изменений';
+
+comment on column comments.commentator_role is 'Роль человека, который оставил комментарий';
+
+comment on column comments.comment_state is 'Текущее состояние комментария';
+
+comment on column comments.pinned is 'закреплен комментарий или нет. ';
+
+comment on column comments.created_on is 'Время создания комментария';
+
+create or replace function update_confirmed_requests() returns trigger
+    language plpgsql
+as
+$$
 BEGIN
     UPDATE events
     SET confirmed_requests = (SELECT COUNT(*)
@@ -186,11 +219,9 @@ BEGIN
 END;
 $$;
 
-DROP TRIGGER IF EXISTS update_confirmed_requests_after_insert ON requests;
+create trigger update_confirmed_requests_after_insert
+    after insert or update or delete
+    on requests
+    for each row
+execute procedure update_confirmed_requests();
 
--- Создание нового триггера
-CREATE TRIGGER update_confirmed_requests_after_insert
-    AFTER INSERT OR UPDATE OR DELETE
-    ON requests
-    FOR EACH ROW
-EXECUTE FUNCTION update_confirmed_requests();

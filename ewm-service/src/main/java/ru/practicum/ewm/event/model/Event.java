@@ -9,11 +9,13 @@ import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.Type;
 import org.hibernate.annotations.TypeDef;
 import ru.practicum.ewm.category.model.Category;
+import ru.practicum.ewm.comment.model.Comment;
 import ru.practicum.ewm.compilation.model.Compilation;
 import ru.practicum.ewm.user.model.User;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
+import java.util.Set;
 
 @Entity
 @Table(name = "events")
@@ -35,7 +37,7 @@ public class Event {
     private String annotation;
     @Column(name = "description", nullable = false, length = 7000)
     private String description;
-    @OneToOne(fetch = FetchType.EAGER)
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "initiator_id", nullable = false)
     private User initiator;
     @ManyToOne(fetch = FetchType.EAGER)
@@ -69,6 +71,9 @@ public class Event {
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "compilation_id")
     private Compilation compilation;
+    /*Комментарии*/
+    @OneToMany(mappedBy = "event", fetch = FetchType.EAGER)
+    private Set<Comment> comments;
     /*Просмотры*/
     @Column(name = "views", nullable = false)
     private Long views;
