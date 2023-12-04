@@ -8,6 +8,7 @@ import ru.practicum.ewm.comment.dto.CommentDtoIn;
 import ru.practicum.ewm.comment.dto.CommentDtoOut;
 import ru.practicum.ewm.comment.mapper.CommentMapper;
 import ru.practicum.ewm.comment.model.Comment;
+import ru.practicum.ewm.comment.model.CommentState;
 import ru.practicum.ewm.comment.model.CommentatorRole;
 import ru.practicum.ewm.comment.model.QComment;
 import ru.practicum.ewm.comment.repository.CommentRepository;
@@ -29,6 +30,7 @@ public class AuthorizedCommentService implements IAuthorizedCommentService {
     private final CommentRepository commentRepository;
 
     @Override
+    @Transactional
     public CommentDtoOut create(Long userId,
                                 Long eventId,
                                 CommentDtoIn commentDtoIn) {
@@ -41,6 +43,7 @@ public class AuthorizedCommentService implements IAuthorizedCommentService {
     }
 
     @Override
+    @Transactional
     public CommentDtoOut update(Long userId,
                                 Long eventId,
                                 Long commId,
@@ -64,6 +67,44 @@ public class AuthorizedCommentService implements IAuthorizedCommentService {
         Comment existingComment = getCommentOrThrow(commId);
         checkBeforePinComment(initiator, event, existingComment, pinned);
         return CommentMapper.toCommentDtoOut(commentRepository.save(existingComment));
+    }
+
+    @Override
+    @Transactional
+    public CommentDtoOut delete(Long userId,
+                                Long eventId,
+                                Long commId) {
+        User commentator = getUserOrThrow(userId);
+        Event event = getEventOrThrow(eventId);
+        Comment existingComment = getCommentOrThrow(commId);
+        checkBeforeDelete(commentator, event, existingComment);
+        return CommentMapper.toCommentDtoOut(commentRepository.save(existingComment));
+    }
+
+    /**
+     * Проверка комментария перед удалением и изменение состояния удаления.
+     *
+     * @param commentator     комментатор
+     * @param event           событие
+     * @param existingComment существующий комментарий
+     */
+    private void checkBeforeDelete(User commentator,
+                                   Event event,
+                                   Comment existingComment) {
+        // комментатор может удалить только свой комментарий
+        if (!existingComment.getCommentator()
+                .getId()
+                .equals(commentator.getId())) {
+            throw new ForbiddenException(String.format(
+                    "Comment with id %d can be deleted only by commentator with id %d",
+                    existingComment.getId(), existingComment.getCommentator()
+                            .getId()));
+        }
+
+        // Сбрасываем закрепленность.
+        existingComment.setPinned(false);
+        existingComment.setState(CommentState.DELETED_BY_USER);
+        return;
     }
 
     /**

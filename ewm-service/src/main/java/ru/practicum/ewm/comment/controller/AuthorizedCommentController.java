@@ -33,7 +33,7 @@ public class AuthorizedCommentController {
     }
 
     @PatchMapping("/{commId}")
-    public ResponseEntity<CommentDtoOut> update(
+    public ResponseEntity<CommentDtoOut> updateComment(
             @PathVariable(name = "userId", required = true) Long userId,
             @PathVariable(name = "eventId", required = true) Long eventId,
             @PathVariable(name = "commId", required = true) Long commId,
@@ -65,6 +65,26 @@ public class AuthorizedCommentController {
         log.info("pinComment: userId={}, eventId={}, commId={}", userId, eventId, commId);
 
         CommentDtoOut commentDtoOut = authorizedCommentService.pin(userId, eventId, commId, pinned);
+
+        return ResponseEntity.ok(commentDtoOut);
+    }
+
+    /**
+     * Удалить комментарий(скрыть)
+     *
+     * @param userId  id комментатора
+     * @param eventId id события
+     * @param commId  id комментария
+     * @return CommentDtoOut
+     */
+    @DeleteMapping("/{commId}")
+    public ResponseEntity<CommentDtoOut> deleteComment(
+            @PathVariable(name = "userId", required = true) Long userId,
+            @PathVariable(name = "eventId", required = true) Long eventId,
+            @PathVariable(name = "commId", required = true) Long commId) {
+        log.info("deleteComment: userId={}, eventId={}, commId={}", userId, eventId, commId);
+
+        CommentDtoOut commentDtoOut = authorizedCommentService.delete(userId, eventId, commId);
 
         return ResponseEntity.ok(commentDtoOut);
     }

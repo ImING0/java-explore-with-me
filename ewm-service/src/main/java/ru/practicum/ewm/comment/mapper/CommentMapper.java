@@ -38,18 +38,27 @@ public class CommentMapper {
                 .build();
     }
 
+    /**
+     * Маппинг комментария в ДТО исходящего комментария
+     *
+     * @param comment комментарий
+     * @return ДТО исходящего комментария
+     */
     public CommentDtoOut toCommentDtoOut(Comment comment) {
+        boolean isVisible = comment.getState()
+                .equals(CommentState.VISIBLE);
+
         return CommentDtoOut.builder()
                 .id(comment.getId())
                 .eventId(comment.getEvent()
                         .getId())
-                .text(comment.getState()
-                        .equals(CommentState.VISIBLE) ? comment.getText() : comment.getState()
+                .text(isVisible ? comment.getText() : comment.getState()
                         .getDescription())
-                .commentator(UserMapper.toUserShortDtoOut(comment.getCommentator()))
-                .commentatorRole(comment.getCommentatorRole())
+                .commentator(
+                        isVisible ? UserMapper.toUserShortDtoOut(comment.getCommentator()) : null)
+                .commentatorRole(isVisible ? comment.getCommentatorRole() : null)
                 .pinned(comment.getPinned())
-                .createdOn(comment.getCreatedOn())
+                .createdOn(isVisible ? comment.getCreatedOn() : null)
                 .build();
     }
 }

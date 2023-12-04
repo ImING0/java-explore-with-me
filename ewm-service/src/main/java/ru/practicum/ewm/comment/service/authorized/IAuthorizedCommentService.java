@@ -45,4 +45,16 @@ public interface IAuthorizedCommentService {
                       Long eventId,
                       Long commId,
                       Boolean pinned);
+
+    /**
+     * Удалить комментарий (скрыть).
+     *
+     * @param userId  id комментатора
+     * @param eventId id события
+     * @param commId  id комментария
+     * @return удаленный комментарий
+     */
+    CommentDtoOut delete(Long userId,
+                         Long eventId,
+                         Long commId);
 }
