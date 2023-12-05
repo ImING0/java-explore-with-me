@@ -4,7 +4,7 @@ create type request_status as enum ('PENDING', 'CONFIRMED', 'REJECTED', 'CANCELE
 
 create type commentator_role as enum ('AUTHORIZED', 'INITIATOR', 'ADMIN');
 
-create type comment_state as enum ('DELETED_BY_USER', 'DELETED_BY_ADMIN', 'VISIBLE');
+create type comment_state as enum ('DELETED_BY_USER', 'DELETED_BY_ADMIN','DELETED_BY_INITIATOR','VISIBLE');
 
 create table if not exists categories
 (

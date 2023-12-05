@@ -16,6 +16,7 @@ import ru.practicum.ewm.comment.service.authorized.IAuthorizedCommentService;
 import ru.practicum.ewm.error.ForbiddenException;
 import ru.practicum.ewm.error.ResourceNotFoundException;
 import ru.practicum.ewm.event.model.Event;
+import ru.practicum.ewm.event.model.EventState;
 import ru.practicum.ewm.event.repository.EventRepository;
 import ru.practicum.ewm.user.model.User;
 import ru.practicum.ewm.user.repository.UserRepository;
@@ -36,6 +37,7 @@ public class AuthorizedCommentService implements IAuthorizedCommentService {
                                 CommentDtoIn commentDtoIn) {
         User commentator = getUserOrThrow(userId);
         Event event = getEventOrThrow(eventId);
+        checkCommentBeforeCreate(commentator, event);
         CommentatorRole commentatorRole = getCommentatorRole(commentator, event);
         Comment commentToSave = CommentMapper.toComment(commentDtoIn, commentatorRole, commentator,
                 event);
@@ -81,6 +83,17 @@ public class AuthorizedCommentService implements IAuthorizedCommentService {
         return CommentMapper.toCommentDtoOut(commentRepository.save(existingComment));
     }
 
+    private void checkCommentBeforeCreate(User commentator,
+                                          Event event) {
+        // комментатор может создать комментарий только к событию которое опубликонно
+        if (!event.getState()
+                .equals(EventState.PUBLISHED)) {
+            throw new ForbiddenException(String.format(
+                    "Commentator with id %d can't create comment to unpublished event with id %d",
+                    commentator.getId(), event.getId()));
+        }
+    }
+
     /**
      * Проверка комментария перед удалением и изменение состояния удаления.
      *
@@ -91,6 +104,17 @@ public class AuthorizedCommentService implements IAuthorizedCommentService {
     private void checkBeforeDelete(User commentator,
                                    Event event,
                                    Comment existingComment) {
+        // Если комментатор инициатор события и комментарий принадлежит событию, то удаляем
+        if (event.getInitiator()
+                .getId()
+                .equals(commentator.getId()) && event.getId()
+                .equals(existingComment.getEvent()
+                        .getId())) {
+            existingComment.setPinned(false);
+            existingComment.setState(CommentState.DELETED_BY_INITIATOR);
+            return;
+        }
+
         // комментатор может удалить только свой комментарий
         if (!existingComment.getCommentator()
                 .getId()
