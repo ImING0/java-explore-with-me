@@ -2,7 +2,7 @@
 	"info": {
 		"_postman_id": "70939854-c1e5-4697-9846-c5106c120a22",
 		"name": "Explore with me\" Api комментарии",
-		"description": "Коллекция для тестирования функциональности комментирования",
+		"description": "Коллекция для тестирования функциональновсти комментирования",
 		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
 		"_exporter_id": "27224183"
 	},
@@ -289,6 +289,15 @@
 					"request": {
 						"method": "PATCH",
 						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{{request_body}}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
 						"url": {
 							"raw": "{{baseUrl}}/users/:userId/events/:eventId/comment/:commId",
 							"host": [
@@ -1297,8 +1306,9 @@
 											"\r",
 											"// Проверка совпадения идентификатора комментария\r",
 											"pm.test(\"Идентификатор комментария соответствует ожидаемому\", function () {\r",
-											"    pm.expect(target.id).to.eql(commentId);\r",
+											"    pm.expect(target.id.toString()).to.eql(commentId.toString());\r",
 											"});\r",
+											"\r",
 											"\r",
 											"// Проверка совпадения текста комментария\r",
 											"pm.test(\"Текст комментария соответствует отправленному\", function () {\r",
@@ -1409,7 +1419,7 @@
 											"const commId  = pm.collectionVariables.get(\"commId\");\r",
 											"\r",
 											"pm.test(\"Поля id, commentator, commentatorRole, createdOn должны быть null, текст 'Удалено администратором'\", function() {\r",
-											"    pm.expect(responseData.id).to.be.eql(commId);\r",
+											"    pm.expect(responseData.id.toString()).to.be.eql(commId.toString());\r",
 											"    pm.expect(responseData.commentator).to.be.null;\r",
 											"    pm.expect(responseData.commentatorRole).to.be.null;\r",
 											"    pm.expect(responseData.createdOn).to.be.null;\r",
