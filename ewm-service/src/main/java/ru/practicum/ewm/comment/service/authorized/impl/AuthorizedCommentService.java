@@ -37,7 +37,9 @@ public class AuthorizedCommentService implements IAuthorizedCommentService {
                                 CommentDtoIn commentDtoIn) {
         User commentator = getUserOrThrow(userId);
         Event event = getEventOrThrow(eventId);
-        checkCommentBeforeCreate(commentator, event);
+
+        throwIfEventUnpublishedBeforeCreate(commentator, event);
+
         CommentatorRole commentatorRole = getCommentatorRole(commentator, event);
         Comment commentToSave = CommentMapper.toComment(commentDtoIn, commentatorRole, commentator,
                 event);
@@ -53,7 +55,7 @@ public class AuthorizedCommentService implements IAuthorizedCommentService {
         User commentator = getUserOrThrow(userId);
         Event event = getEventOrThrow(eventId);
         Comment existingComment = getCommentOrThrow(commId);
-        checkCommentBeforeUpdate(commentator, existingComment);
+        throwIfNotCommentatorBeforeUpdate(commentator, existingComment);
         existingComment.setText(commentDtoIn.getText());
         return CommentMapper.toCommentDtoOut(commentRepository.save(existingComment));
     }
@@ -83,9 +85,15 @@ public class AuthorizedCommentService implements IAuthorizedCommentService {
         return CommentMapper.toCommentDtoOut(commentRepository.save(existingComment));
     }
 
-    private void checkCommentBeforeCreate(User commentator,
-                                          Event event) {
-        // комментатор может создать комментарий только к событию которое опубликонно
+    /**
+     * Проверка комментария перед созданием, если проверка не пройдена, то выбрасывается исключение.
+     *
+     * @param commentator комментатор
+     * @param event       событие
+     */
+    private void throwIfEventUnpublishedBeforeCreate(User commentator,
+                                                     Event event) {
+        // комментатор может создать комментарий только к событию которое опубликовано
         if (!event.getState()
                 .equals(EventState.PUBLISHED)) {
             throw new ForbiddenException(String.format(
@@ -128,7 +136,6 @@ public class AuthorizedCommentService implements IAuthorizedCommentService {
         // Сбрасываем закрепленность.
         existingComment.setPinned(false);
         existingComment.setState(CommentState.DELETED_BY_USER);
-        return;
     }
 
     /**
@@ -159,15 +166,17 @@ public class AuthorizedCommentService implements IAuthorizedCommentService {
                 .equals(newPinnedState)) {
             return;
             // Если комментарий закреплен и новое состояние - открепить, то открепляем
-        } else if ((existingComment.getPinned()
-                .equals(true)) && (newPinnedState.equals(false))) {
+            /*Сноска для себя:
+             * true = false из условия выше.*/
+        } else if (existingComment.getPinned()
+                .equals(true)) {
             existingComment.setPinned(false);
             return;
         }
 
-        // Проверяем, есть ли у данного события закрепленные комментарии, если новый
-        // комментарий хочет закрепиться, то открепляем уже закрепленный комментарий и
-        // прикрепляем новый.
+            /*Проверяем, есть ли у данного события закрепленные комментарии, если новый
+            комментарий хочет закрепиться, то открепляем уже закрепленный комментарий и
+            прикрепляем новый.*/
         if (newPinnedState) {
             QComment comment = QComment.comment;
             BooleanExpression predicate = comment.isNotNull()
@@ -180,12 +189,17 @@ public class AuthorizedCommentService implements IAuthorizedCommentService {
                 commentRepository.saveAndFlush(commentToUnpin);
             }
             existingComment.setPinned(true);
-            return;
         }
     }
 
-    private void checkCommentBeforeUpdate(User commentator,
-                                          Comment comment) {
+    /**
+     * Проверка комментария перед обновлением, если проверка не пройдена, то выбрасывается исключение.
+     *
+     * @param commentator комментатор
+     * @param comment     комментарий
+     */
+    private void throwIfNotCommentatorBeforeUpdate(User commentator,
+                                                   Comment comment) {
         // комментатор может обновить только свой комментарий
         if (!comment.getCommentator()
                 .getId()
@@ -226,9 +240,10 @@ public class AuthorizedCommentService implements IAuthorizedCommentService {
      */
     private CommentatorRole getCommentatorRole(User commentator,
                                                Event event) {
-        return event.getInitiator()
-                .getId()
-                .equals(commentator.getId()) ? CommentatorRole.INITIATOR
+        //@formatter:off
+        return event.getInitiator().getId().equals(commentator.getId())
+                ? CommentatorRole.INITIATOR
                 : CommentatorRole.AUTHORIZED;
+        //@formatter:on
     }
 }
